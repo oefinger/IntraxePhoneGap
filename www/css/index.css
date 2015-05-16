@@ -1,3 +1,8 @@
+body {
+	margin-left:10px;
+	margin-right:10px;
+}
+
 .row {
   margin: 0;
   padding: 0;
@@ -26,21 +31,57 @@ hr {
 }
 
 .fretboard_segment {
-	float:left;
-    overflow: hidden;
+    overflow: visible;
     white-space: nowrap;
-	text-align: center;
-	position: relative;
-	margin: 0px 0px 0px 0px;
 }
 
-.circle {
-	border:2px solid red;
+.unplayed_string_circle {
+	border:2px solid lightgreen;
     height: 20px;
     width: 20px;
     border-radius: 20px;
-    position:relative;
-    margin:0px auto;
+	position:absolute;
+	display:none;
+	z-index:3;
+}
+
+.played_string_circle_hit {
+	background-color:green;
+	z-index:3;
+}
+
+.played_string_circle_miss {
+	background-color:red;
+	z-index:3;
+}
+
+.tab_string_circle {
+	border:2px solid blue;
+	background-color:lightblue;
+    height: 17px;
+    width: 17px;
+    border-radius: 17px;
+    position:absolute;
+	display:none;
+	z-index:2;
+}
+
+.tab_string_circle_hit {
+	background-color:green;
+}
+
+.tab_string_circle_miss {
+	background-color:orange;
+}
+
+.guitar_fretboard_marker_circle {
+	border:2px solid #8A4117;
+	background-color: #6F4E37;
+    height: 20px;
+    width: 20px;
+    border-radius: 20px;
+	position:absolute;
+	z-index:2;
 }
 
 .fret {
@@ -49,21 +90,17 @@ hr {
 	background-color:#966F33;
 	border-bottom: 2px solid #8C7E6C;
 	border-right: 4px ridge #BCC6CC;
-	margin: 0px 0px 0px 0px;
+	z-index:1;
 }
 
 .nut {
-	width: 40px;
 	display: inline-block;
 	background-color:#AF7817;
 	border-bottom: 2px solid #8C7E6C;
 	border-right: 2px ridge #FFFFFF;
-	margin: 0px 0px 0px 0px;
 }
 
 .scrollstring {
-	float:left;
-    overflow: visible;
     white-space: nowrap;
 }
 
@@ -71,6 +108,10 @@ hr {
 	width:70px;
 	display: inline-block;
 	background-color:lightgray;
+}
+
+.tab_note_endmusic {
+	background-color:gray;
 }
 
 .active_note {
@@ -92,14 +133,13 @@ hr {
 	position:fixed;
 }
 
-.score_hit {
-	display: none;
-	background-color:green;
-	color:white;
+#tab_wrapper {
+	margin-left:90px;
+	border-left: 5px solid red;
 }
 
-.score_miss {
-	display: none;
-	background-color:red;
-	color:white;
+.fretboard_row {
+
+	overflow-x:auto;
+	overflow-y:hidden;
 }

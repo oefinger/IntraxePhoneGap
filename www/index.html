@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 
 <html>
     <head>
@@ -12,6 +12,7 @@
         <div class="app">
             <div id="ui" style="overflow:hidden;">
 				
+				<button id="reset_tab">Reset</button>
 				<button id="play_tab">Play</button>
 				<button id="pause_tab">Pause</button>
 				<button id="speed_up">Speed Up</button>
@@ -24,108 +25,70 @@
 				<div class="spacer"></div>
 				<div class="spacer"></div>
 				
-				
-				<!-- Begin String 6 -->
-							<div id="string_score_6" class="debug string_score">
-								<div id="string_score_6_hit" class="score_hit">!!</div>
-								<div id="string_score_6_miss" class="score_miss">!!</div>
-							</div>
-							<div class="row">
-								<div class="scrollstring" id="string_6">
-									<!-- filled in by JavaScript --><div class="temp">&nbsp;</div>	
+				<div id="tab_wrapper">
+					<!-- Begin String 6 -->
+								<div class="row">
+									<div class="scrollstring" id="string_6">
+										<!-- filled in by JavaScript --><div class="temp">&nbsp;</div>	
+									</div>
+								</div>		
+					<!-- End String 6 -->
+					
+					<div class="row spacer"></div>
+					
+					<!-- Begin String 5 -->
+								<div class="row">
+									<div class="scrollstring" id="string_5">
+										<!-- filled in by JavaScript --><div class="temp">&nbsp;</div>	
+									</div>
 								</div>
-							</div>
-							<div class="debug active_note">
-								<div id="string6_active" class="note string_off">&nbsp;</div>
-							</div>					
-				<!-- End String 6 -->
-				
-				<div class="row spacer"></div>
-				
-				<!-- Begin String 5 -->
-							<div id="string_score_5" class="debug string_score">
-								<div id="string_score_5_hit" class="score_hit">!!</div>
-								<div id="string_score_5_miss" class="score_miss">!!</div>
-							</div>
-							<div class="row">
-								<div class="scrollstring" id="string_5">
-									<!-- filled in by JavaScript --><div class="temp">&nbsp;</div>	
+					<!-- End String 5 -->
+					
+					<div class="row spacer"></div>
+					
+					<!-- Begin String 4 -->
+								<div class="row">
+									<div class="scrollstring" id="string_4">
+										<!-- filled in by JavaScript --><div class="temp">&nbsp;</div>	
+									</div>
 								</div>
-							</div>
-							<div class="debug active_note">
-								<div id="string5_active" class="note string_off">&nbsp;</div>
-							</div>
-				<!-- End String 5 -->
-				
-				<div class="row spacer"></div>
-				
-				<!-- Begin String 4 -->
-							<div id="string_score_4" class="debug string_score">
-								<div id="string_score_4_hit" class="score_hit">!!</div>
-								<div id="string_score_4_miss" class="score_miss">!!</div>
-							</div>
-							<div class="row">
-								<div class="scrollstring" id="string_4">
-									<!-- filled in by JavaScript --><div class="temp">&nbsp;</div>	
+					<!-- End String 4 -->
+					
+					<div class="row spacer"></div>
+					
+					<!-- Begin String 3 -->
+								<div class="row">
+									<div class="scrollstring" id="string_3">
+										<!-- filled in by JavaScript --><div class="temp">&nbsp;</div>	
+									</div>
 								</div>
-							</div>
-							<div class="debug active_note">
-								<div id="string4_active" class="note string_off">&nbsp;</div>
-							</div>
-				<!-- End String 4 -->
-				
-				<div class="row spacer"></div>
-				
-				<!-- Begin String 3 -->
-							<div id="string_score_3" class="debug string_score">
-								<div id="string_score_3_hit" class="score_hit">!!</div>
-								<div id="string_score_3_miss" class="score_miss">!!</div>
-							</div>
-							<div class="row">
-								<div class="scrollstring" id="string_3">
-									<!-- filled in by JavaScript --><div class="temp">&nbsp;</div>	
+					<!-- End String 3 -->
+					
+					<div class="row spacer"></div>
+					
+					<!-- Begin String 2 -->
+								<div class="row">
+									<div class="scrollstring" id="string_2">
+										<!-- filled in by JavaScript --><div class="temp">&nbsp;</div>	
+									</div>
 								</div>
-							</div>
-							<div class="debug active_note">
-								<div id="string3_active" class="note string_off">&nbsp;</div>
-							</div>
-				<!-- End String 3 -->
-				
-				<div class="row spacer"></div>
-				
-				<!-- Begin String 2 -->
-							<div id="string_score_2" class="debug string_score">
-								<div id="string_score_2_hit" class="score_hit">!!</div>
-								<div id="string_score_2_miss" class="score_miss">!!</div>
-							</div>
-							<div class="row">
-								<div class="scrollstring" id="string_2">
-									<!-- filled in by JavaScript --><div class="temp">&nbsp;</div>	
+					<!-- End String 2 -->
+					
+					<div class="row spacer"></div>
+					
+					<!-- Begin String 1 -->
+								<div class="row">
+									<div class="scrollstring" id="string_1">
+										<!-- filled in by JavaScript --><div class="temp">&nbsp;</div>	
+									</div>
 								</div>
-							</div>
-							<div class="debug active_note">
-								<div id="string2_active" class="note string_off">&nbsp;</div>
-							</div>
-				<!-- End String 2 -->
+					<!-- End String 1 -->
+					
+					<div class="row spacer">&nbsp;</div>
+					
 				
-				<div class="row spacer"></div>
+				</div>
 				
-				<!-- Begin String 1 -->
-							<div id="string_score_1" class="debug string_score">
-								<div id="string_score_1_hit" class="score_hit">!!</div>
-								<div id="string_score_1_miss" class="score_miss">!!</div>
-							</div>
-							<div class="row">
-								<div class="scrollstring" id="string_1">
-									<!-- filled in by JavaScript --><div class="temp">&nbsp;</div>	
-								</div>
-							</div>
-							<div class="debug active_note">
-								<div id="string1_active" class="note string_off">&nbsp;</div>
-							</div>
-				<!-- End String 1 -->
-				
-				<div class="row spacer">&nbsp;</div>
 				<div class="row spacer">&nbsp;</div>
 				
 				<!-- Begin guitar fretboard -->
@@ -134,6 +97,7 @@
 					<!-- filled in by JavaScript -->
 				</div>
 				
+				<!-- End guitar fretboard -->
 				
             </div>
         
@@ -176,6 +140,8 @@
 					<option value="21">21</option>
 					<option value="22">22</option>
 				</select> 
+				<button id="simulate_finger_on">Finger On</button>
+				<button id="simulate_finger_off">Finger Off</button>
 				<button id="simulate_string_play">Play</button>
 				<button id="simulate_string_mute">Mute</button>
 			</div>
