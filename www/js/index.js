@@ -1,7 +1,8 @@
 var ZOOM_ADJUST = 10;                                // change in width per zoom click 
 var DEBUG = true;
 
-var SCROLLPERIOD = 500;                              // initialized and modified based on SPEED;
+var SCROLLPERIOD = 4000;                              // initialized and modified based on SPEED;
+var TIMER_INTERRUPT = 50;
 var PLAY = false;
 var CURRENT_TIME = 0;                                // increments with scroll so that we know where in music we are 
 var END_TIME = 0;                                    // set based on loaded tab
@@ -25,13 +26,12 @@ $(function() {
 	$('.debug').hide();
   }
   
-  initActual();
   loadTab();
   drawFretboard();
   drawGuitarFretboardFretMarkers();
-  
+  initActual();  
   showTab();
-      
+
 });
 
 $('#play_tab').click(function() {
@@ -65,32 +65,14 @@ $('#zoom_up').click(function() {
 });
 
 
-function scrollManager() {
+function moveTabMarker() {
 	
-	if(PLAY && CURRENT_TIME < END_TIME) {
-		updateScoreAndFretboard();
-		scrollLeft();
-	}
-	
-	if(CURRENT_TIME >= END_TIME-END_PADDING) {
-		pause();
-	}
-	
-	
+	$('.tab_marker').css('left','0');
+	$('.tab_marker').animate(
+		{'left': '+=' + SCREEN_WIDTH},
+		SCROLLPERIOD, 'linear', moveTabMarker);
 }
 
-function scrollLeft() {
-	
-	debugOut("Current Time: " + CURRENT_TIME);
-	
-	$('.scrollstring').velocity(
-        {'margin-left': '-=' + $('.tab_note').css('width')},
-        SCROLLPERIOD, 'linear', scrollManager);
-	
-	CURRENT_TIME++
-	
-}
-	
 
 // Tab is 2-d array - string number, time
 var Tab = [];
@@ -146,7 +128,7 @@ function loadTab() {
 		writeStringSilence(i,5);
 	}
 	
-	for(var k=0;k<10;k++) {
+	for(var k=0;k<1000;k++) {
 		writeNote(1,(k%6)+1,1);
 	}
 	writeNote(2,4,3);
@@ -218,9 +200,9 @@ function drawFretboard() {
 	$('.nut').css('width', nutinnerwidth+'px').css('height',fretheight+'px');
 	$('.fret').css('width', fretinnerwidth+'px').css('height',fretheight+'px');
 	$('.unplayed_string_circle').css('height',circlediameter+'px').css('width',circlediameter+'px').css('border-radius',circlediameter+'px').css('margin-top',(fretheight-circlediameter/2-circleborderradius)+'px').css('margin-left',(fretinnerwidth-circlediameter-circleborderradius)/2 +'px');
-    $('.unplayed_string_circle_fret0').css('margin-left',(nutinnerwidth-circlediameter-circleborderradius)/2 +'px');
+	$('.unplayed_string_circle_fret0').css('margin-left',(nutinnerwidth-circlediameter-circleborderradius)/2 +'px');
 	$('.tab_string_circle').css('height',circlediameter+'px').css('width',circlediameter+'px').css('border-radius',circlediameter+'px').css('margin-top',(fretheight-circlediameter/2-circleborderradius)+'px').css('margin-left',(fretinnerwidth-circlediameter-circleborderradius)/2 +'px');
-    $('.tab_string_circle_fret0').css('margin-left',(nutinnerwidth-circlediameter-circleborderradius)/2 +'px');
+	$('.tab_string_circle_fret0').css('margin-left',(nutinnerwidth-circlediameter-circleborderradius)/2 +'px');
 	
 	// determine whether last fret needs to be widened to touch right edge of screen
 	var pixels_remaining = SCREEN_WIDTH - screenpadding - nutouterwidth - NUM_FRETS*fretouterwidth;
@@ -258,13 +240,16 @@ function play() {
 	$('#play_tab').hide();
 	PLAY = true;
 	debugOut('PLAY'); 
-	scrollLeft(); //scrollManager();
+	timerInterrupt = setInterval(updateScoreAndFretboard,TIMER_INTERRUPT);
+	moveTabMarker();
 }
 
 function pause() {
 
 	PLAY = false;
 	$('#play_tab').show();
+	$('.tab_marker').stop();
+	clearInterval(timerInterrupt);
 	debugOut('PAUSE');		
 }
 
@@ -284,14 +269,18 @@ function slowDown() {
 
 function zoomDown() {
 
-	$('.note').css('width',(parseInt($('.note').css('width'))-ZOOM_ADJUST)+'px');
-	debugOut('Zoom Down: ' + $('.note').css('width') + 'px');
+	// $('.tab_note').css('width',(parseInt($('.tab_note').css('width'))-ZOOM_ADJUST)+'px');
+	if($('.tab_note').outerWidth() > ZOOM_ADJUST) {
+		$('.tab_note').css('width',($('.tab_note').outerWidth()-ZOOM_ADJUST)+'px');
+		debugOut('Zoom Down: ' + $('.tab_note').css('width'));
+	}
 }
 
 function zoomUp() {
 
-	$('.note').css('width',(parseInt($('.note').css('width'))+ZOOM_ADJUST));
-	debugOut('Zoom Up: ' +  $('.note').css('width'))
+	//$('.tab_note').css('width',(parseInt($('.note').css('width'))+ZOOM_ADJUST));
+	$('.tab_note').css('width',($('.tab_note').outerWidth()+ZOOM_ADJUST)+'px');
+	debugOut('Zoom Up: ' +  $('.tab_note').css('width'))
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -302,13 +291,15 @@ var activeStrings = [];
 
 function initActual() {
 
-	for(var i=0; i<NUM_STRINGS; i++)
+	for(var i=0; i<NUM_STRINGS; i++) {
 		activeStrings.push(-1);                    // -1 means string silent
+		placeFinger(i+1,0);
+	}
 }
 
 function placeFinger(string, fret) {
 
-	resetFingers();
+	//resetFingers();
 	$('#fingerplacement_string' + string + '_fret' + fret).show();
 }
 
@@ -337,6 +328,8 @@ function stopNote(string, fret) {
 
 function updateScoreAndFretboard() {
 
+	CURRENT_TIME = Math.floor($('.tab_marker').css('left').replace('px','')/$('.tab_note').outerWidth());
+	
 	$('.tab_string_circle').hide().removeClass('.tab_string_circle_hit').removeClass('.tab_string_circle_miss');
 	
 	for(var i=0; i<NUM_STRINGS; i++) {
