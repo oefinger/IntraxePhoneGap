@@ -1,444 +1,152 @@
-var ZOOM_ADJUST = 10;                                // change in width per zoom click 
-var DEBUG = true;
-
-var SCROLLPERIOD = 20000;                            // initialized and modified based on SPEED;
-var PIXELS_PER_MS;                                   // initialized upon load
-var TIMER_INTERRUPT = 80;                            // in ms, dictates how frequently we look at current actual note vs. tab note for scoring
-var PLAY = false;
-var CURRENT_TIME = 0;                                // increments with scroll so that we know where in music we are 
-var END_TIME = 0;                                    // set based on loaded tab
-var END_PADDING = 30;                                // number of empty/silent notes to add at end of tab
-
-var NUM_STRINGS = 6;
-var NUM_FRETS = 22;
-var SCORE = 0;
-var MISS_PENALTY = 0.5;
-var HIT_REWARD = 1;
-
-var SCREEN_WIDTH;
-var SCREEN_HEIGHT;
-
-var activeStrings = [];
-var Tab = [];                                       // Tab is 2-d array - string number, time
-var activeTabIndex = [];
-
-for(var i=0; i<NUM_STRINGS; i++) {
-	Tab[i] = [];
-}
-
-$(function() {
-  
-  SCREEN_WIDTH = $(window).width();
-  SCREEN_HEIGHT = $(window).height();
-  PIXELS_PER_MS = SCREEN_WIDTH/SCROLLPERIOD;
-  
-  if(!DEBUG) {
-	$('.debug').hide();
-  }
-  
-  loadTab();
-  drawFretboard();
-  drawGuitarFretboardFretMarkers();
-  initActual();  
-  showTab();
-  
-  debugOut(1000*PIXELS_PER_MS + 'pixels/sec scroll rate');
-
-});
-
-$('#play_tab').click(function() {
-
-		play();
-});
-	
-$('#pause_tab').click(function() {
-
-		pause();
-});
-
-$('#speed_up').click(function() {
-
-		speedUp();
-});
-
-$('#slow_down').click(function() {
-
-		slowDown();
-});
-
-$('#zoom_down').click(function() {
-
-		zoomDown();
-});
-
-$('#zoom_up').click(function() {
-
-		zoomUp();
-});
-
-function moveTabMarker() {
-	
-	$('.tab_marker').css('left','0');
-	$('.tab_marker').animate(
-		{'left': '+=' + SCREEN_WIDTH},
-		SCROLLPERIOD, 'linear', moveTabMarker);
-}
-
-var Note = function(string, fret, is_silent, timeInMs) {
-
-	this.string = string;
-	this.fret = fret;
-	this.is_silent = is_silent;
-	this.time = timeInMs;
-}
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// duration is unitless - minimum value is 1, no max value
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-function writeNote(string, fret, timeInMs) {
-         
-	var thisnote = new Note(string, fret, false, timeInMs);
-	Tab[(string-1)].push(thisnote);
-	activeTabIndex[(string-1)] = Tab[(string-1)].length-1;
-	
-}
-
-function writeStringSilence(string, timeInMs) {
-
-	var thisnote = new Note(string, 0, true, timeInMs);
-	Tab[(string-1)].push(thisnote);
-	activeTabIndex[(string-1)] = Tab[(string-1)].length-1;
-	
-}
-
-function writeWholeSilence(duration) {	
-
-	// whole silence will begin from the END of the last current note so that time resumption of non-silence is not string-dependent
-}
-
-function loadTab() {
-
-	// tabs are loaded in REVERSE order since we use push/pop (LIFO) style buffering for reads
-	debugOut('Loading Tab...');
-
-	
-	TOT_TIME = 5000;
-	END_TIME = TOT_TIME;
-	NUM_NOTES = 12;
-	for(var k=0;k<NUM_NOTES;k++) {
-		writeNote((k%6)+1,k%12,END_TIME);
-		END_TIME -= (TOT_TIME/NUM_NOTES);
-	}
-		
-	debugOut('Tab Load Complete...');	
-}
-
-function showTab() {
-
-	debugOut('Showing Tab...');
-
-	LEADIN_TIME = 2000;                       // give 2 second lead-in time
-	
-	maxtime_lastnote = Tab[0][0].time;
-	mintime_lastnote = Tab[0][0].time;
-	
-	// set intro silence
-	for(i=NUM_STRINGS; i >= 1; i--) {
-		thisnote = Tab[(i-1)][Tab[(i-1)].length-1];
-		html_transcribe = '<div class="tab_note" style="padding-right:' + (LEADIN_TIME+thisnote.time)*PIXELS_PER_MS + 'px">&nbsp;</div>';
-		$('#string_'+i).append(html_transcribe);
-		maxtime_lastnote = thisnote.time > maxtime_lastnote ? thisnote.time : maxtime_lastnote;
-	}
-	
-	for(i=NUM_STRINGS; i >= 1; i--) {
-		for(j=Tab[(i-1)].length-1; j > 0; j--) {
-		    thisnote = Tab[(i-1)][j];
-		    nextnote = Tab[(i-1)][j-1];
-		    html_transcribe = '<div class="tab_note" style="padding-right:' + (nextnote.time-thisnote.time)*PIXELS_PER_MS + 'px">' + (thisnote.is_silent ? '&nbsp;':thisnote.fret) + '</div>';
-		    $('#string_'+i).append(html_transcribe);    
-		}
-	}
-	
-	// even out silence on all strings to bring tab to coherent end - outro silence
-	
-	END_TIME = maxtime_lastnote + LEADIN_TIME;
-	for(i=NUM_STRINGS; i >= 1; i--) {
-		thisnote = Tab[(i-1)][0];
-		html_transcribe = '<div class="tab_note" style="padding-right:' + (END_TIME-thisnote.time)*PIXELS_PER_MS + 'px">' + (thisnote.is_silent ? '&nbsp;':thisnote.fret) + '</div>';
-		$('#string_'+i).append(html_transcribe);    
-	}
-	
-	
-}
-
-
-function drawFretboard() {
-		
-	for(var i=NUM_STRINGS; i>=1; i--) {
-		$('#fretboard').append('<div class="row fretboard_row"><div id="string_fretboard_"' + i + ' class="fretboard_segment">');
-		$('#fretboard').append('<div id="string' + i + '_fret0" class="nut"><div id="fingerplacement_string' + i + '_fret0" class="unplayed_string_circle unplayed_string_circle_fret0"></div><div id="tab_string' + i + '_fret0" class="tab_string_circle tab_string_circle_fret0"></div></div>');
-		
-		for(var j=1; j <= NUM_FRETS; j++) {
-			$('#fretboard').append('<div id="string' + i + '_fret' + j + '" class="fret ' + (j==NUM_FRETS ? 'last_fret':'') + '"><div id="fingerplacement_string' + i + '_fret' + j + '" class="unplayed_string_circle"></div><div id="tab_string' + i + '_fret' + j + '" class="tab_string_circle"></div></div>');
-		}
-		
-		$('#fretboard').append('</div></div>');
-	}
-
-	// non-string lower segment
-	$('#fretboard').append('<div class="row fretboard_row"><div id="string_fretboard_0 class="fretboard_segment">');
-	$('#fretboard').append('<div id="string' + i + '_fret0" class="nut"></div>');
-	
-	for(var j=1; j <= NUM_FRETS; j++) {
-		$('#fretboard').append('<div id="stringX_fret' + j + '" class="fret ' + (j==NUM_FRETS ? 'last_fret':'') + '"></div>');
-	}
-		
-	$('#fretboard').append('</div></div>');
-		
-	// determine spacing - include nut in calculation
-	
-	var screenpadding = (parseInt($('body').css('margin-left').replace('px','')) + parseInt($('body').css('margin-right').replace('px','')));
-	var tmp = (SCREEN_WIDTH-screenpadding)/(NUM_FRETS + 2);
-	var nutinnerwidth = Math.floor(tmp*0.35);
-	var nutouterwidth = nutinnerwidth + $('.nut').outerWidth()-$('.nut').innerWidth();
-	var fretouterwidth =  Math.floor((SCREEN_WIDTH-screenpadding-nutouterwidth)/NUM_FRETS);
-	var fretinnerwidth = fretouterwidth - ($('.fret').outerWidth() - $('.fret').innerWidth());
-	var fretheight = Math.floor(fretinnerwidth*0.40);
-	var circlediameter = Math.floor(fretheight/2);
-	var circleborderradius = $('.unplayed_string_circle').css('border-top-width').replace('px','');
-	$('.nut').css('width', nutinnerwidth+'px').css('height',fretheight+'px');
-	$('.fret').css('width', fretinnerwidth+'px').css('height',fretheight+'px');
-	$('.unplayed_string_circle').css('height',circlediameter+'px').css('width',circlediameter+'px').css('border-radius',circlediameter+'px').css('margin-top',(fretheight-circlediameter/2-circleborderradius)+'px').css('margin-left',(fretinnerwidth-circlediameter-circleborderradius)/2 +'px');
-	$('.unplayed_string_circle_fret0').css('margin-left',(nutinnerwidth-circlediameter-circleborderradius)/2 +'px');
-	$('.tab_string_circle').css('height',circlediameter+'px').css('width',circlediameter+'px').css('border-radius',circlediameter+'px').css('margin-top',(fretheight-circlediameter/2-circleborderradius)+'px').css('margin-left',(fretinnerwidth-circlediameter-circleborderradius)/2 +'px');
-	$('.tab_string_circle_fret0').css('margin-left',(nutinnerwidth-circlediameter-circleborderradius)/2 +'px');
-	
-	// determine whether last fret needs to be widened to touch right edge of screen
-	var pixels_remaining = SCREEN_WIDTH - screenpadding - nutouterwidth - NUM_FRETS*fretouterwidth;
-	var new_width_last_fret = parseInt($('.fret').css('width').replace('px',''))+pixels_remaining;
-	$('last_fret').css('width',new_width_last_fret+'px');
-	
-}
-
-function drawGuitarFretboardFretMarkers() {
-
-	$('#string3_fret3').append('<div class="guitar_fretboard_marker_circle"></div>');
-	$('#string3_fret5').append('<div class="guitar_fretboard_marker_circle"></div>');
-	$('#string3_fret7').append('<div class="guitar_fretboard_marker_circle"></div>');
-	$('#string3_fret9').append('<div class="guitar_fretboard_marker_circle"></div>');
-	$('#string2_fret12').append('<div class="guitar_fretboard_marker_circle"></div>');
-	$('#string4_fret12').append('<div class="guitar_fretboard_marker_circle"></div>');
-	$('#string3_fret15').append('<div class="guitar_fretboard_marker_circle"></div>');
-	$('#string3_fret17').append('<div class="guitar_fretboard_marker_circle"></div>');
-		
-	// determine spacing - include nut in calculation
-	var fretwidth = parseInt($('.fret').css('width').replace('px',''));
-	var fretheight = parseInt($('.fret').css('height').replace('px',''));
-	var circlediameter = Math.floor(fretheight/2);
-	var circleborderradius = parseInt(Math.floor($('.guitar_fretboard_marker_circle').css('border-top-width').replace('px','')));
-	$('.guitar_fretboard_marker_circle').css('height',circlediameter+'px').css('width',circlediameter+'px').css('border-radius',circlediameter+'px').css('margin-top',(fretheight-circlediameter-circleborderradius)/2 +'px').css('margin-left',(fretwidth-circlediameter-circleborderradius)/2 +'px');
-
-}
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// TAB notes and control: duration is now in a context of SPEED variable
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-function play() {
-
-	$('#play_tab').hide();
-	PLAY = true;
-	debugOut('PLAY'); 
-	timerInterrupt = setInterval(updateScoreAndFretboard,TIMER_INTERRUPT);
-	moveTabMarker();
-}
-
-function pause() {
-
-	PLAY = false;
-	$('#play_tab').show();
-	$('.tab_marker').stop();
-	clearInterval(timerInterrupt);
-	debugOut('PAUSE');		
-}
-
-function speedUp() {
-
-	SCROLLPERIOD *= 0.9;
-	updateScrollPeriod();
-	debugOut('Speed Up');
-}
-
-function slowDown() {
-
-	SCROLLPERIOD *= 1.1;
-	updateScrollPeriod();
-	debugOut('Slow Down');
-}
-
-function zoomDown() {
-
-	// $('.tab_note').css('width',(parseInt($('.tab_note').css('width'))-ZOOM_ADJUST)+'px');
-	if($('.tab_note').outerWidth() > ZOOM_ADJUST) {
-		$('.tab_note').css('width',($('.tab_note').outerWidth()-ZOOM_ADJUST)+'px');
-		debugOut('Zoom Down: ' + $('.tab_note').css('width'));
-	}
-}
-
-function zoomUp() {
-
-	//$('.tab_note').css('width',(parseInt($('.note').css('width'))+ZOOM_ADJUST));
-	$('.tab_note').css('width',($('.tab_note').outerWidth()+ZOOM_ADJUST)+'px');
-	debugOut('Zoom Up: ' +  $('.tab_note').css('width'))
-}
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// ACTUAL notes input:
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-function initActual() {
-
-	for(var i=0; i<NUM_STRINGS; i++) {
-		activeStrings.push(-1);                    // -1 means string silent
-		placeFinger(i+1,0);
-	}
-}
-
-function placeFinger(string, fret) {
-
-	$('#fingerplacement_string' + string + '_fret' + fret).show();
-}
-
-function resetFingers() {
-
-	$('.unplayed_string_circle').hide();
-}
-
-function playNote(string, fret) {
-
-	$('#fingerplacement_string' + string + '_fret' + fret).removeClass('played_string_circle_miss').removeClass('played_string_circle_hit');
-	activeStrings[(string-1)] = fret;
-	updateScoreAndFretboard();
-}
-
-function stopNote(string, fret) {
-
-	$('#fingerplacement_string' + string + '_fret' + fret).removeClass('played_string_circle_miss').removeClass('played_string_circle_hit');
-	activeStrings[(string-1)] = -1;
-	updateScoreAndFretboard();
-}
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Tab vs. actual scoring events
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-function updateScoreAndFretboard() {
-
-	CURRENT_TIME = Math.floor($('.tab_marker').css('left').replace('px','')/$('.tab_note').outerWidth());	
-	$('.tab_string_circle').hide().removeClass('.tab_string_circle_hit').removeClass('.tab_string_circle_miss');
-	
-	for(var i=0; i<NUM_STRINGS; i++) {
-		
-		fret = activeStrings[i];
-		string = i+1;
-		
-		//if(CURRENT_TIME > activeTabIndex[i]) {
-		//	activeTabIndex[i] = activeTabIndex[i] > 0 ? activeTabIndex[i]--:0;
-			alert(Tab[i][activeTabIndex[i]].time);
-		//}
-		
-		/*
-		// determine whether the note matches tab
-		if(Tab[i][activeTabIndex[i]].is_silent) {
-			if(fret == -1)
-				hitSilence(string, fret);
-			else
-				missSilent(string,fret);
-		}
-		else {
-			// show tab position on fretboard
-			$('#tab_string' + Tab[i][activeTabIndex[i]].string + '_fret' + Tab[i][activeTabIndex[i]].fret).show();
-		
-			if(fret != Tab[(string-1)][activeTabIndex[i]].fret)
-				missNote(string, fret, Tab[(string-1)][activeTabIndex[i]].string, Tab[(string-1)][activeTabIndex[i]].fret);
-			else
-				hitNote(string,fret)
-		}
-		
-		
-		*/
-	}
-	
-	$('#score').html(SCORE);
-	
-}
-
-function missSilent(string, fret) {
-	
-	$('#fingerplacement_string' + string + '_fret' + fret).addClass('played_string_circle_miss');
-	$('#string_score_' + string + '_miss').show();
-	SCORE -= (SCORE >= MISS_PENALTY ? MISS_PENALTY:0);                                         // cap minimum score at 0
-}
-
-function missNote(string, fret, string_tab, fret_tab) {
-
-    // played wrong string or played during silent
-	if($('#fingerplacement_string' + string + '_fret' + fret).is(':visible')) {
-		$('#fingerplacement_string' + string + '_fret' + fret).addClass('played_string_circle_miss');
-	}
-	if($('#tab_string' + string_tab + '_fret' + fret_tab).is(':visible')) {
-		$('#tab_string' + string_tab + '_fret' + fret_tab).addClass('tab_string_circle_miss');
-	}
-	
-	// missed a note that should have been played
-	
-	$('#fingerplacement_string' + string + '_fret' + fret).addClass('played_string_circle_miss');
-	$('#string_score_' + string + '_miss').show();
-	SCORE -= (SCORE >= MISS_PENALTY ? MISS_PENALTY:0);                                         // cap minimum score at 0
-}
-
-function hitSilence(string, fret) {
-
-	//$('#fingerplacement_string' + string + '_fret' + fret).addClass('played_string_circle_hit');
-	//$('#string_score_' + string + '_hit').show();
-}
-
-function hitNote(string, fret) {
-
-	$('#fingerplacement_string' + string + '_fret' + fret).addClass('played_string_circle_hit');
-	$('#string_score_' + string + '_hit').show();
-	SCORE += HIT_REWARD;
-}
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// DEBUG
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-function debugOut(string_info,append) {
-
-	$('#diag1').append(string_info + '<br>');
-}
-
-$('#simulate_finger_on').click(function() {
-
-	placeFinger($('#selected_string').val(),$('#selected_fret').val());
-});
-
-$('#simulate_finger_off').click(function() {
-
-	resetFingers();
-});
-
-$('#simulate_string_play').click(function() {
-
-	playNote($('#selected_string').val(),$('#selected_fret').val());
-});
-  
-$('#simulate_string_mute').click(function() {
-
-	stopNote($('#selected_string').val(),$('#selected_fret').val());
-});
- 
-			
-
+/*
+    SimpleSerial index.js
+    Created 7 May 2013
+    Modified 9 May 2013
+    by Tom Igoe
+*/
+
+
+var app = {
+    macAddress: "AA:BB:CC:DD:EE:FF",  // get your mac address from bluetoothSerial.list
+    chars: "",
+
+/*
+    Application constructor
+ */
+    initialize: function() {
+        this.bindEvents();
+        console.log("Starting SimpleSerial app");
+    },
+/*
+    bind any events that are required on startup to listeners:
+*/
+    bindEvents: function() {
+        document.addEventListener('deviceready', this.onDeviceReady, false);
+        connectButton.addEventListener('touchend', app.manageConnection, false);
+    },
+
+/*
+    this runs when the device is ready for user interaction:
+*/
+    onDeviceReady: function() {
+        // check to see if Bluetooth is turned on.
+        // this function is called only
+        //if isEnabled(), below, returns success:
+        var listPorts = function() {
+            // list the available BT ports:
+            bluetoothSerial.list(
+                function(results) {
+                    app.display(JSON.stringify(results));
+                },
+                function(error) {
+                    app.display(JSON.stringify(error));
+                }
+            );
+        }
+
+        // if isEnabled returns failure, this function is called:
+        var notEnabled = function() {
+            app.display("Bluetooth is not enabled.")
+        }
+
+         // check if Bluetooth is on:
+        bluetoothSerial.isEnabled(
+            listPorts,
+            notEnabled
+        );
+    },
+/*
+    Connects if not connected, and disconnects if connected:
+*/
+    manageConnection: function() {
+
+        // connect() will get called only if isConnected() (below)
+        // returns failure. In other words, if not connected, then connect:
+        var connect = function () {
+            // if not connected, do this:
+            // clear the screen and display an attempt to connect
+            app.clear();
+            app.display("Attempting to connect. " +
+                "Make sure the serial port is open on the target device.");
+            // attempt to connect:
+            bluetoothSerial.connect(
+                app.macAddress,  // device to connect to
+                app.openPort,    // start listening if you succeed
+                app.showError    // show the error if you fail
+            );
+        };
+
+        // disconnect() will get called only if isConnected() (below)
+        // returns success  In other words, if  connected, then disconnect:
+        var disconnect = function () {
+            app.display("attempting to disconnect");
+            // if connected, do this:
+            bluetoothSerial.disconnect(
+                app.closePort,     // stop listening to the port
+                app.showError      // show the error if you fail
+            );
+        };
+
+        // here's the real action of the manageConnection function:
+        bluetoothSerial.isConnected(disconnect, connect);
+    },
+/*
+    subscribes to a Bluetooth serial listener for newline
+    and changes the button:
+*/
+    openPort: function() {
+        // if you get a good Bluetooth serial connection:
+        app.display("Connected to: " + app.macAddress);
+        // change the button's name:
+        connectButton.innerHTML = "Disconnect";
+        // set up a listener to listen for newlines
+        // and display any new data that's come in since
+        // the last newline:
+        bluetoothSerial.subscribe('\n', function (data) {
+            app.clear();
+            app.display(data);
+        });
+    },
+
+/*
+    unsubscribes from any Bluetooth serial listener and changes the button:
+*/
+    closePort: function() {
+        // if you get a good Bluetooth serial connection:
+        app.display("Disconnected from: " + app.macAddress);
+        // change the button's name:
+        connectButton.innerHTML = "Connect";
+        // unsubscribe from listening:
+        bluetoothSerial.unsubscribe(
+                function (data) {
+                    app.display(data);
+                },
+                app.showError
+        );
+    },
+/*
+    appends @error to the message div:
+*/
+    showError: function(error) {
+        app.display(error);
+    },
+
+/*
+    appends @message to the message div:
+*/
+    display: function(message) {
+        var display = document.getElementById("message"), // the message div
+            lineBreak = document.createElement("br"),     // a line break
+            label = document.createTextNode(message);     // create the label
+
+        display.appendChild(lineBreak);          // add a line break
+        display.appendChild(label);              // add the message node
+    },
+/*
+    clears the message div:
+*/
+    clear: function() {
+        var display = document.getElementById("message");
+        display.innerHTML = "";
+    }
+};      // end of app
