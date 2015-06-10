@@ -6,6 +6,10 @@
 */
 
 
+function findPartner(results) {
+	alert(JSON.stringify(results));    // temp
+}
+
 var app = {
     macAddress: "AA:BB:CC:DD:EE:FF",  // get your mac address from bluetoothSerial.list
     chars: "",
@@ -33,10 +37,12 @@ var app = {
         // this function is called only
         //if isEnabled(), below, returns success:
         var listPorts = function() {
+					
             // list the available BT ports:
             bluetoothSerial.list(
                 function(results) {
-                    app.display(JSON.stringify(results));
+					findPartner(results);
+                    // app.display(JSON.stringify(results));
                 },
                 function(error) {
                     app.display(JSON.stringify(error));
