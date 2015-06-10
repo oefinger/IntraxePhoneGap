@@ -19,7 +19,7 @@ function findPartner(results)
 	}
 	
 	if(count == 0) {
-		alert('Found no Intraxe guitars for pairint')
+		alert('Found no Intraxe guitars for pairing')
 	}
 	else if(count > 1)
 		alert('Found more than 1 Intraxe guitar for pairing')
