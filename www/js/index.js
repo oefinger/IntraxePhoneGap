@@ -7,14 +7,14 @@
 
 var PARTNER_NAME = 'HC-06';
 var count = 0;
-var PARTNER_MAC = '';
 
 function findPartner(results) {
 
     for(var i=0; i<results.length; i++) {
 		if(results[i].name == PARTNER_NAME) {
 			count++;
-			PARTNER_MAC = results[i].address;
+			app.macAddress = results[i].address;
+			alert(app.macAddress);
 		}
 	}
 	
@@ -62,7 +62,6 @@ var app = {
                 function(results) {
 					
 					findPartner(results);
-                    // app.display(JSON.stringify(results));
                 },
                 function(error) {
                     app.display(JSON.stringify(error));
