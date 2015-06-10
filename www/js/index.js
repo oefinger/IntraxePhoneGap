@@ -5,9 +5,28 @@
     by Tom Igoe
 */
 
+var PARTNER_NAME = 'HC-06';
+var count = 0;
+var PARTNER_MAC = '';
 
-function findPartner(results) {
-	alert(JSON.stringify(results));    // temp
+function findPartner(results) 
+
+    for(var i=0; i<results.length; i++) {
+		if(results[i].name == PARTNER_NAME) {
+			count++;
+			PARTNER_MAC = results[i].address;
+		}
+	}
+	
+	if(count == 0) {
+		alert('Found no Intraxe guitars for pairint')
+	}
+	else if(count > 1)
+		alert('Found more than 1 Intraxe guitar for pairing')
+	}
+	else {
+		alert('Rock on! Found a single partner for pairing');
+	}
 }
 
 var app = {
