@@ -9,7 +9,7 @@ var PARTNER_NAME = 'HC-06';
 var count = 0;
 var PARTNER_MAC = '';
 
-function findPartner(results) 
+function findPartner(results) {
 
     for(var i=0; i<results.length; i++) {
 		if(results[i].name == PARTNER_NAME) {
@@ -21,7 +21,7 @@ function findPartner(results)
 	if(count == 0) {
 		alert('Found no Intraxe guitars for pairing')
 	}
-	else if(count > 1)
+	else if(count > 1) {
 		alert('Found more than 1 Intraxe guitar for pairing')
 	}
 	else {
@@ -60,8 +60,8 @@ var app = {
             // list the available BT ports:
             bluetoothSerial.list(
                 function(results) {
-					alert('yo');
-					//findPartner(results);
+					
+					findPartner(results);
                     // app.display(JSON.stringify(results));
                 },
                 function(error) {
