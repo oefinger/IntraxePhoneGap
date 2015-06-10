@@ -60,7 +60,8 @@ var app = {
             // list the available BT ports:
             bluetoothSerial.list(
                 function(results) {
-					findPartner(results);
+					alert('yo');
+					//findPartner(results);
                     // app.display(JSON.stringify(results));
                 },
                 function(error) {
