@@ -8,11 +8,12 @@
 */
 
 var PARTNER_NAME = 'HC-06';                                  // look for this Bluetooth partner name
-var count = 0;
 var connectivity_interrupt;
+var CONNECTIVITY_TIME_INTERVAL = 3000;
+var HEARTBEAT_REPY_TIME = 1000;
 
 function sendHeartbeat() {
-		alert('t');
+		
 		var success = function() {    
             app.clear();
 			app.display(data);
@@ -24,10 +25,14 @@ function sendHeartbeat() {
 
         var data = 'H';                                     // Arduino expects H for heartbeat value
         bluetoothSerial.write(data, success, failure);
+		
+		heartbeatTimer = setTimeout(function(){ updateConnectStatus(3) }, HEARTBEAT_REPY_TIME);               // if no response within 1 s, 
 }
 
 function findPartner(results) {
 
+	var count = 0;
+	
     for(var i=0; i<results.length; i++) {
 		if(results[i].name == PARTNER_NAME) {
 			count++;
@@ -148,7 +153,7 @@ var app = {
 		bluetoothSerial.subscribe('\n', app.onData, app.onError);
 
 		// set up ongoing monitoring of the channel
-		connectivity_interrupt = setInterval(sendHeartbeat,3000);
+		connectivity_interrupt = setInterval(sendHeartbeat,CONNECTIVITY_TIME_INTERVAL);
     },
 
 /*
