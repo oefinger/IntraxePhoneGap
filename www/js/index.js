@@ -27,6 +27,7 @@ function findPartner(results) {
 	}
 	else {
 		alert('Rock on! I can see your guitar and we are ready to roll.');
+		this.manageConnection;
 	}
 }
 
@@ -46,7 +47,7 @@ var app = {
 */
     bindEvents: function() {
         document.addEventListener('deviceready', this.onDeviceReady, false);
-        connectButton.addEventListener('touchend', app.manageConnection, false);
+        //connectButton.addEventListener('touchend', app.manageConnection, false);
 		sendButton.addEventListener('touchstart', this.sendData, false);
     },
 
