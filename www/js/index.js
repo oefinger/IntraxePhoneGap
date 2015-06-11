@@ -128,10 +128,11 @@ var app = {
         // set up a listener to listen for newlines
         // and display any new data that's come in since
         // the last newline:
-        bluetoothSerial.subscribe('\n', function (data) {
+        /*bluetoothSerial.subscribe('\n', function (data) {
             app.clear();
             app.display(data);
-        });
+        });*/
+		bluetoothSerial.subscribe('\n', app.onData, app.onError);
     },
 
 /*
@@ -149,6 +150,16 @@ var app = {
                 },
                 app.showError
         );
+    },
+	
+	
+	onData: function(data) { // data received from Arduino
+        app.clear();
+        app.display(data);
+    },
+	
+	onError: function(reason) {
+        alert("ERROR: " + reason); // real apps should use notification.alert
     },
 /*
     appends @error to the message div:
