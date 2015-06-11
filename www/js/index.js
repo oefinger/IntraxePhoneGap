@@ -11,7 +11,7 @@ var PARTNER_NAME = 'HC-06';                                  // look for this Bl
 var count = 0;
 var connectivity_interrupt;
 
-function sendHeartbeat {
+function sendHeartbeat() {
 		alert('t');
 		var success = function() {    
             app.clear();
