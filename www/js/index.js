@@ -27,7 +27,7 @@ function findPartner(results) {
 	}
 	else {
 		alert('Rock on! I can see your guitar and we are ready to roll.');
-		this.manageConnection;
+		this.manageConnection();
 	}
 }
 
