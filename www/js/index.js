@@ -157,7 +157,6 @@ var app = {
 	sendData: function(event) { // send data to Arduino
 
         var success = function() {    
-			alert('sent!');
             app.clear();
 			app.display(data);
         };
