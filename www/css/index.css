@@ -3,6 +3,14 @@ body {
 	margin-right:10px;
 }
 
+#connect_status {
+
+	position:absolute;
+	top:5px;
+	right:5px;
+}
+
+
 .row {
   margin: 0;
   padding: 0;

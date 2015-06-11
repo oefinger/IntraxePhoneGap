@@ -17,6 +17,8 @@ var SCORE = 0;
 var MISS_PENALTY = 1;
 var HIT_REWARD = 10;
 
+var CONNECTION_STATUS = 0;                          
+
 var SCREEN_WIDTH;
 var SCREEN_HEIGHT;
 
