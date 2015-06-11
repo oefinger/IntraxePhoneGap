@@ -150,8 +150,7 @@ var app = {
 	
 	
 	onData: function(data) { // data received from Arduino
-        app.clear();
-        app.display(data);
+        processData(data);                                  // uses function in ui.js
     },
 	
 	sendData: function(event) { // send data to Arduino
