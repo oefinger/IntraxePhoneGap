@@ -26,6 +26,8 @@ var activeStrings = [];
 var Tab = [];                                       // Tab is 2-d array - string number, time
 var activeTabIndex = [];
 
+var scoring_interrupt;
+
 for(var i=0; i<NUM_STRINGS; i++) {
 	Tab[i] = [];
 	activeTabIndex[i] = 0;
@@ -270,7 +272,7 @@ function play() {
 	$('#play_tab').hide();
 	PLAY = true;
 	debugOut('PLAY'); 
-	timerInterrupt = setInterval(updateScoreAndFretboard,TIMER_INTERRUPT);
+	scoring_interrupt = setInterval(updateScoreAndFretboard,TIMER_INTERRUPT);
 	moveTabMarker();
 }
 
@@ -279,7 +281,7 @@ function pause() {
 	PLAY = false;
 	$('#play_tab').show();
 	$('.tab_marker').stop();
-	clearInterval(timerInterrupt);
+	clearInterval(scoring_interrupt);
 	debugOut('PAUSE');		
 }
 
@@ -442,9 +444,16 @@ function processData(data) {
 function updateConnectStatus(status) {
 
 	switch(status) {
-	
 		case 1:
+			$('#connect_status').css('border','5px solid yellow');
+			break;
+		case 2:
 			$('#connect_status').css('border','5px solid green');
+			break;
+		case 3:
+			$('#connect_status').css('border','5px solid red');
+			break;
+
 	}
 	
 }

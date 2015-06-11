@@ -9,6 +9,22 @@
 
 var PARTNER_NAME = 'HC-06';                                  // look for this Bluetooth partner name
 var count = 0;
+var connectivity_interrupt;
+
+function sendHeartbeat {
+		alert('t');
+		var success = function() {    
+            app.clear();
+			app.display(data);
+        };
+
+        var failure = function() {
+            alert("Failed writing data to Bluetooth peripheral");
+        };
+
+        var data = 'H';                                     // Arduino expects H for heartbeat value
+        bluetoothSerial.write(data, success, failure);
+}
 
 function findPartner(results) {
 
@@ -40,14 +56,13 @@ var app = {
  */
     initialize: function() {
         this.bindEvents();
-        console.log("Starting SimpleSerial app");
     },
 /*
     bind any events that are required on startup to listeners:
 */
     bindEvents: function() {
         document.addEventListener('deviceready', this.onDeviceReady, false);
-		sendButton.addEventListener('touchstart', this.sendData, false);
+		//sendButton.addEventListener('touchstart', this.sendData, false);
     },
 
 /*
@@ -95,6 +110,7 @@ var app = {
             app.clear();
             app.display("Attempting to connect. " +
                 "Make sure the serial port is open on the target device.");
+			updateConnectStatus(1);      // updateConnectStatus is in ui.js
             // attempt to connect:
             bluetoothSerial.connect(
                 app.macAddress,  // device to connect to
@@ -112,6 +128,7 @@ var app = {
                 app.closePort,     // stop listening to the port
                 app.showError      // show the error if you fail
             );
+			updateConnectStatus(3);      // updateConnectStatus is in ui.js
         };
 
         // here's the real action of the manageConnection function:
@@ -125,10 +142,13 @@ var app = {
         // if you get a good Bluetooth serial connection:
         //app.display("Connected to: " + app.macAddress);
       
-	    updateConnectStatus(1);      // updateConnectStatus is in ui.js
+	    updateConnectStatus(2);      // updateConnectStatus is in ui.js
 		
         // set up a listener to listen for newlines
 		bluetoothSerial.subscribe('\n', app.onData, app.onError);
+
+		// set up ongoing monitoring of the channel
+		connectivity_interrupt = setInterval(sendHeartbeat,3000);
     },
 
 /*
@@ -151,7 +171,7 @@ var app = {
 	onData: function(data) { // data received from Arduino
         processData(data);
     },
-	
+	/*
 	sendData: function(event) { // send data to Arduino
 
         var success = function() {    
@@ -166,7 +186,7 @@ var app = {
         var data = messageInput.value;
         bluetoothSerial.write(data, success, failure);
     },
-	
+	*/
 	onError: function(reason) {
         alert("ERROR: " + reason); // real apps should use notification.alert
     },
