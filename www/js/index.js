@@ -47,7 +47,6 @@ var app = {
 */
     bindEvents: function() {
         document.addEventListener('deviceready', this.onDeviceReady, false);
-        //connectButton.addEventListener('touchend', app.manageConnection, false);
 		sendButton.addEventListener('touchstart', this.sendData, false);
     },
 
@@ -124,11 +123,11 @@ var app = {
 */
     openPort: function() {
         // if you get a good Bluetooth serial connection:
-        app.display("Connected to: " + app.macAddress);
-        // change the button's name:
-        connectButton.innerHTML = "Disconnect";
-        // set up a listener to listen for newlines
+        //app.display("Connected to: " + app.macAddress);
       
+	    updateConnectStatus(1);      // updateConnectStatus is in ui.js
+		
+        // set up a listener to listen for newlines
 		bluetoothSerial.subscribe('\n', app.onData, app.onError);
     },
 
@@ -138,8 +137,7 @@ var app = {
     closePort: function() {
         // if you get a good Bluetooth serial connection:
         app.display("Disconnected from: " + app.macAddress);
-        // change the button's name:
-        connectButton.innerHTML = "Connect";
+    
         // unsubscribe from listening:
         bluetoothSerial.unsubscribe(
                 function (data) {

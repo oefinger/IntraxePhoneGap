@@ -438,6 +438,16 @@ function hitNote(string, fret) {
 function processData(data) {
 	alert("dd"+data);
 }
+
+function updateConnectStatus(status) {
+
+	switch(status) {
+	
+		case 1:
+			$('#connect_status').css('border','5px solid green');
+	}
+	
+}
  
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // DEBUG
