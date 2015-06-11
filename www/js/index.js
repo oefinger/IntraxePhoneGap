@@ -47,6 +47,7 @@ var app = {
     bindEvents: function() {
         document.addEventListener('deviceready', this.onDeviceReady, false);
         connectButton.addEventListener('touchend', app.manageConnection, false);
+		sendButton.addEventListener('touchstart', this.sendData, false);
     },
 
 /*
@@ -156,6 +157,20 @@ var app = {
 	onData: function(data) { // data received from Arduino
         app.clear();
         app.display(data);
+    },
+	
+	sendData: function(event) { // send data to Arduino
+
+        var success = function() {          
+            // do nothing
+        };
+
+        var failure = function() {
+            alert("Failed writing data to Bluetooth peripheral");
+        };
+
+        var data = messageInput.value;
+        bluetoothSerial.write(data, success, failure);
     },
 	
 	onError: function(reason) {
