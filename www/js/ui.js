@@ -5,7 +5,7 @@ var	LEADIN_TIME = 2000;                              // give 2 second lead-in ti
 var END_TIME;
 var SCROLLPERIOD = 10000;                            // initialized and modified based on SPEED;
 var PIXELS_PER_MS;                                   // initialized upon load
-var TIMER_INTERRUPT = 500;                            // in ms, dictates how frequently we look at current actual note vs. tab note for scoring
+var TIMER_INTERRUPT = 100;                            // in ms, dictates how frequently we look at current actual note vs. tab note for scoring
 var PLAY = false;
 var CURRENT_TIME = 0;                                // increments with scroll so that we know where in music we are 
 var SCROLL_INDEX = 0;
@@ -119,9 +119,9 @@ $('#zoom_up').click(function() {
 
 function iterateTabMarker() {
 
-	SCROLL_INDEX++;
+	SCROLL_INDEX = SCROLL_INDEX+1;
 	$('.scrollstring').css('margin-left','-' + $('.scrollstring').outerWidth() + 'px');
-	
+	moveTabMarker();
 }
 
 function moveTabMarker() {
@@ -129,7 +129,7 @@ function moveTabMarker() {
 	$('.tab_marker').css('left',$('body').css('margin-left').replace('px',''));
 	$('.tab_marker').animate(
 		{'left': '+=' + SCREEN_WIDTH},
-		SCROLLPERIOD, 'linear', moveTabMarker);
+		SCROLLPERIOD, 'linear', iterateTabMarker);
 }
 
 var Note = function(string, fret, is_silent, timeInMs) {
