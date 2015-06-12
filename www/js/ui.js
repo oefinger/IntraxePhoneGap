@@ -312,12 +312,12 @@ function play() {
 }
 
 function pause() {
-	alert('pause');
+
+	clearInterval(scoring_interrupt);	
 	PLAY = false;
-	$('#play_tab').show();
 	$('#tab_marker').stop();
-	clearInterval(scoring_interrupt);
-	debugOut('PAUSE');		
+	$('#play_tab').show();
+	//debugOut('PAUSE');		
 }
 
 function speedUp() {
