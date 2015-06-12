@@ -67,10 +67,12 @@ function reset() {
 	SCORE = 0;
 	
 	$('.tab_marker').css('left',$('body').css('margin-left'));
+	
 	initActual();
-
 	initActiveTabs();	
-	updateScoreAndFretboard();
+	//updateScoreAndFretboard();
+	$('.tab_string_circle').hide().removeClass('.tab_string_circle_hit').removeClass('.tab_string_circle_miss');
+	
 }
 
 function initActiveTabs() {
