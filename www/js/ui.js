@@ -203,10 +203,9 @@ function loadTab() {
 		writeStringSilence(k+1,lastnote_time+2400);
 		writeStringSilence(k+1,lastnote_time+2600);
 		writeStringSilence(k+1,lastnote_time+2800);
-		writeStringSilence(k+1,lastnote_time+SCROLLPERIOD*2);
 	}
 	
-	END_TIME = lastnote_time + 3000;
+	END_TIME = lastnote_time + SCROLLPERIOD;
 	
 	debugOut('Tab Load Complete...');	
 	
