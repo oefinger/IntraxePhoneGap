@@ -310,7 +310,7 @@ function play() {
 }
 
 function pause() {
-
+	alert('pause');
 	PLAY = false;
 	$('#play_tab').show();
 	$('#tab_marker').stop();
