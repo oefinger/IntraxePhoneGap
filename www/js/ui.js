@@ -64,6 +64,11 @@ function init() {
 	app.initialize();                        // index.js
 }
 
+$('#reset_tab').click(function() {
+
+		init();
+});
+
 $('#play_tab').click(function() {
 
 		play();
