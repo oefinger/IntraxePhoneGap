@@ -66,7 +66,7 @@ function reset() {
 	SCROLL_INDEX = 0;
 	SCORE = 0;
 	
-	$('.scrollstring').css('margin-left',$('body').css('margin-left'));
+	$('.scrollstring').css('margin-left','0px');
 	$('#tab_marker').css('left',$('body').css('margin-left'));
 	
 	initActual();
@@ -203,7 +203,7 @@ function loadTab() {
 		writeStringSilence(k+1,lastnote_time+2400);
 		writeStringSilence(k+1,lastnote_time+2600);
 		writeStringSilence(k+1,lastnote_time+2800);
-		writeStringSilence(k+1,lastnote_time+SCROLLPERIOD);
+		writeStringSilence(k+1,lastnote_time+SCROLLPERIOD*2);
 	}
 	
 	END_TIME = lastnote_time + 3000;
