@@ -62,12 +62,13 @@ function init() {
 }
 
 function reset() {
-	alert('rest');
+	
 	CURRENT_TIME = 0;                               
 	SCROLL_INDEX = 0;
 	SCORE = 0;
 	
-	$('.tab_marker').css('left',$('body').css('margin-left').replace('px',''));
+	//$('.tab_marker').css('left',$('body').css('margin-left').replace('px',''));
+	$('.tab_marker').css('left',$('body').css('margin-left'));
 
 }
 
