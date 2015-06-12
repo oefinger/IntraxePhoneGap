@@ -439,10 +439,7 @@ function hitNote(string, fret) {
 
 function processData(data) {
 	
-	if(data == 'H') {
 	
-		clearTimeout(heartbeatTimer);
-	}
 }
 
 function updateConnectStatus(status) {

@@ -10,12 +10,12 @@
 var PARTNER_NAME = 'HC-06';                                  // look for this Bluetooth partner name
 var connectivity_interrupt;
 var CONNECTIVITY_TIME_INTERVAL = 3000;
-var HEARTBEAT_REPY_TIME = 1000;
+var HEARTBEAT_REPY_TIME = 500;
 
 var heartbeatTimer;
 
-// wrapper function to call updateConnectStatus in ui.js
-function callUpdateConnectStatus(status) {
+
+function callUpdateConnectStatus(status) {                  // wrapper function to call updateConnectStatus in ui.js
 	updateConnectStatus(status);
 }
 
@@ -23,8 +23,7 @@ function callUpdateConnectStatus(status) {
 function sendHeartbeat() {
 		
 		var success = function() {    
-            app.clear();
-			app.display(data);
+           // do nothing
         };
 
         var failure = function() {
@@ -34,7 +33,7 @@ function sendHeartbeat() {
         var data = 'H';                                     // Arduino expects H for heartbeat value
         bluetoothSerial.write(data, success, failure);
 		
-		heartbeatTimer = setTimeout(function(){ callUpdateConnectStatus(3) }, HEARTBEAT_REPY_TIME);               // if no response within 1 s, 
+		heartbeatTimer = setTimeout(function(){ callUpdateConnectStatus(3) }, HEARTBEAT_REPY_TIME);               // if no response within 1 s, set status to off
 }
 
 function findPartner(results) {
@@ -61,36 +60,26 @@ function findPartner(results) {
 }
 
 var app = {
-    macAddress: "AA:BB:CC:DD:EE:FF",  // get your mac address from bluetoothSerial.list
+
+    macAddress: "AA:BB:CC:DD:EE:FF",                                  // actual MAC will be determined dynamically after querying available
     chars: "",
 
-/*
-    Application constructor
- */
     initialize: function() {
         this.bindEvents();
     },
-/*
-    bind any events that are required on startup to listeners:
-*/
+
     bindEvents: function() {
         document.addEventListener('deviceready', this.onDeviceReady, false);
-		//sendButton.addEventListener('touchstart', this.sendData, false);
     },
 
-/*
-    this runs when the device is ready for user interaction:
-*/
-    onDeviceReady: function() {
-        // check to see if Bluetooth is turned on.
-        // this function is called only
-        //if isEnabled(), below, returns success:
+    onDeviceReady: function() {                                       // this runs when the device is ready for user interaction:
+	
+        // check to see if Bluetooth is turned on. this function is called only if isEnabled(), below, returns success:
         var listPorts = function() {
 					
             // list the available BT ports:
             bluetoothSerial.list(
                 function(results) {
-					
 					findPartner(results);
                 },
                 function(error) {
@@ -110,20 +99,18 @@ var app = {
             notEnabled
         );
     },
-/*
-    Connects if not connected, and disconnects if connected:
-*/
-    manageConnection: function() {
 
-        // connect() will get called only if isConnected() (below)
-        // returns failure. In other words, if not connected, then connect:
+    manageConnection: function() {                               // Connects if not connected, and disconnects if connected:
+
+        // connect() will get called only if isConnected() (below) returns failure. In other words, if not connected, then connect:
         var connect = function () {
+		
             // if not connected, do this:
-            // clear the screen and display an attempt to connect
             app.clear();
             app.display("Attempting to connect. " +
                 "Make sure the serial port is open on the target device.");
-			callUpdateConnectStatus(1);     
+			callUpdateConnectStatus(1);  
+			
             // attempt to connect:
             bluetoothSerial.connect(
                 app.macAddress,  // device to connect to
@@ -132,10 +119,10 @@ var app = {
             );
         };
 
-        // disconnect() will get called only if isConnected() (below)
-        // returns success  In other words, if  connected, then disconnect:
+        // disconnect() will get called only if isConnected() (below). returns success  In other words, if  connected, then disconnect:
         var disconnect = function () {
             app.display("attempting to disconnect");
+			
             // if connected, do this:
             bluetoothSerial.disconnect(
                 app.closePort,     // stop listening to the port
@@ -147,14 +134,10 @@ var app = {
         // here's the real action of the manageConnection function:
         bluetoothSerial.isConnected(disconnect, connect);
     },
-/*
-    subscribes to a Bluetooth serial listener for newline
-    and changes the button:
-*/
+
     openPort: function() {
-        // if you get a good Bluetooth serial connection:
-        //app.display("Connected to: " + app.macAddress);
-      
+	
+        // if you get a good Bluetooth serial connection:  
 	    callUpdateConnectStatus(2);      
 		
         // set up a listener to listen for newlines
@@ -164,10 +147,8 @@ var app = {
 		connectivity_interrupt = setInterval(sendHeartbeat,CONNECTIVITY_TIME_INTERVAL);
     },
 
-/*
-    unsubscribes from any Bluetooth serial listener and changes the button:
-*/
     closePort: function() {
+	
         // if you get a good Bluetooth serial connection:
         app.display("Disconnected from: " + app.macAddress);
     
@@ -179,46 +160,31 @@ var app = {
                 app.showError
         );
     },
-	
-	
-	onData: function(data) { // data received from Arduino
+		
+	onData: function(data) {                     // data received from Arduino
+		
+		app.display('REPLY FROM GUITAR');
 		if(data == 'H') {
+		    app.display('AND IT IS H');
 			clearTimeout(heartbeatTimer);
 		}
 		else {
 			processData(data);					// processData is in ui.js
 		}
     },
-	/*
-	sendData: function(event) { // send data to Arduino
 
-        var success = function() {    
-            app.clear();
-			app.display(data);
-        };
-
-        var failure = function() {
-            alert("Failed writing data to Bluetooth peripheral");
-        };
-
-        var data = messageInput.value;
-        bluetoothSerial.write(data, success, failure);
-    },
-	*/
 	onError: function(reason) {
-        alert("ERROR: " + reason); // real apps should use notification.alert
+	
+        alert("ERROR: " + reason);             // real apps should use notification.alert
     },
-/*
-    appends @error to the message div:
-*/
+
     showError: function(error) {
+	
         app.display(error);
     },
 
-/*
-    appends @message to the message div:
-*/
     display: function(message) {
+	
         var display = document.getElementById("message"), // the message div
             lineBreak = document.createElement("br"),     // a line break
             label = document.createTextNode(message);     // create the label
@@ -226,10 +192,9 @@ var app = {
         display.appendChild(lineBreak);          // add a line break
         display.appendChild(label);              // add the message node
     },
-/*
-    clears the message div:
-*/
+
     clear: function() {
+	
         var display = document.getElementById("message");
         display.innerHTML = "";
     }
