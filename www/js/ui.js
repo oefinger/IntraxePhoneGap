@@ -35,24 +35,34 @@ for(var i=0; i<NUM_STRINGS; i++) {
 
 $(function() {
   
-  SCREEN_WIDTH = $(window).width();
-  SCREEN_HEIGHT = $(window).height();
-  PIXELS_PER_MS = SCREEN_WIDTH/SCROLLPERIOD;
-
-  if(!DEBUG) {
-	$('.debug').hide();
-  }
-  
-  loadTab();
-  drawFretboard();
-  drawGuitarFretboardFretMarkers();
-  initActual();  
-  showTab();
-  
-  debugOut(1000*PIXELS_PER_MS + 'pixels/sec scroll rate');
-  $('.tab_marker').css('left',$('body').css('margin-left').replace('px',''));
- 
+	init();
 });
+
+function init() {
+
+	CURRENT_TIME = 0;                               
+	SCROLL_INDEX = 0;
+	SCORE = 0;
+	
+	SCREEN_WIDTH = $(window).width();
+	SCREEN_HEIGHT = $(window).height();
+	PIXELS_PER_MS = SCREEN_WIDTH/SCROLLPERIOD;
+
+	if(!DEBUG) {
+		$('.debug').hide();
+	}
+  
+	loadTab();
+	drawFretboard();
+	drawGuitarFretboardFretMarkers();
+	initActual();  
+	showTab();
+  
+	debugOut(1000*PIXELS_PER_MS + 'pixels/sec scroll rate');
+	$('.tab_marker').css('left',$('body').css('margin-left').replace('px',''));
+	
+	app.initialize();                        // index.js
+}
 
 $('#play_tab').click(function() {
 
@@ -452,6 +462,7 @@ function updateConnectStatus(status) {
 			$('#connect_status').css('border','5px solid green');
 			break;
 		case 3:
+			alert('Uh oh - lost Bluetooth connection!');
 			$('#connect_status').css('border','5px solid red');
 			break;
 

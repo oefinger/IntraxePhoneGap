@@ -163,10 +163,8 @@ var app = {
 		
 		// strip newline
 		data = data.replace(NEWLINE,'').replace(CARRIAGE_RETURN,'');
-		app.display(data.length);
 		
 		if(data == 'H') {
-		    app.display('AND IT IS H');
 			clearTimeout(heartbeatTimer);
 		}
 		else {
