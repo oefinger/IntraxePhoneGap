@@ -5,7 +5,7 @@ var	LEADIN_TIME = 2000;                              // give 2 second lead-in ti
 var END_TIME;
 var SCROLLPERIOD = 10000;                            // initialized and modified based on SPEED;
 var PIXELS_PER_MS;                                   // initialized upon load
-var TIMER_INTERRUPT = 80;                            // in ms, dictates how frequently we look at current actual note vs. tab note for scoring
+var TIMER_INTERRUPT = 500;                            // in ms, dictates how frequently we look at current actual note vs. tab note for scoring
 var PLAY = false;
 var CURRENT_TIME = 0;                                // increments with scroll so that we know where in music we are 
 var SCROLL_INDEX = 0;
@@ -66,12 +66,12 @@ function reset() {
 	SCROLL_INDEX = 0;
 	SCORE = 0;
 	
-	alert($('body').css('margin-left'));
 	$('.tab_marker').css('left',$('body').css('margin-left'));
 	
 	initActual();
 	initActiveTabs();	
-	$('.tab_string_circle').hide().removeClass('.tab_string_circle_hit').removeClass('.tab_string_circle_miss');
+	
+	$('.tab_string_circle').hide().removeClass('.tab_string_circle_hit').removeClass('.tab_string_circle_miss');             // remove previous scoring/feedback artifacts
 	
 }
 
