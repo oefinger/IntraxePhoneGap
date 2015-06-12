@@ -162,7 +162,7 @@ var app = {
 		
 		// strip newline
 		data = data.replace(NEWLINE,'');
-		app.display('length:'+data.length);
+		app.display('code at 1:'+data.charCodeAt(1));
 		
 		if(data == 'H') {
 		    app.display('AND IT IS H');
