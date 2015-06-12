@@ -120,13 +120,13 @@ $('#zoom_up').click(function() {
 function iterateTabMarker() {
 
 	SCROLL_INDEX = SCROLL_INDEX+1;
-	$('.scrollstring').css('margin-left','-' + $('.scrollstring').outerWidth() + 'px');
+	//$('.scrollstring').css('margin-left','-' + $('.scrollstring').outerWidth() + 'px');
 	moveTabMarker();
 }
 
 function moveTabMarker() {
 	
-	$('.tab_marker').css('left',$('body').css('margin-left').replace('px',''));
+	$('.tab_marker').css('left',$('body').css('margin-left'));
 	$('.tab_marker').animate(
 		{'left': '+=' + SCREEN_WIDTH},
 		SCROLLPERIOD, 'linear', iterateTabMarker);
