@@ -70,8 +70,8 @@ function reset() {
 	
 	initActual();
 	initActiveTabs();	
-	//updateScoreAndFretboard(); // need
 	$('.tab_string_circle').hide().removeClass('.tab_string_circle_hit').removeClass('.tab_string_circle_miss');
+	updateScoreAndFretboard(); 
 	
 }
 
