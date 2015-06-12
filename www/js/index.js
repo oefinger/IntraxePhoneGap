@@ -8,6 +8,7 @@
 */
 
 var NEWLINE = '\n';
+var CARRIAGE_RETURN = '\r';
 var PARTNER_NAME = 'HC-06';                                  // look for this Bluetooth partner name
 var connectivity_interrupt;
 var CONNECTIVITY_TIME_INTERVAL = 3000;
@@ -161,8 +162,8 @@ var app = {
 	onData: function(data) {                     // data received from Arduino
 		
 		// strip newline
-		data = data.replace(NEWLINE,'');
-		app.display('code at 1:'+data.charCodeAt(1));
+		data = data.replace(NEWLINE,'').replace(CARRIAGE_RETURN,'');
+		app.display(data.length);
 		
 		if(data == 'H') {
 		    app.display('AND IT IS H');
