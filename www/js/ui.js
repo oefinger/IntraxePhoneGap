@@ -62,7 +62,7 @@ function init() {
 }
 
 function reset() {
-
+	alert('rest');
 	CURRENT_TIME = 0;                               
 	SCROLL_INDEX = 0;
 	SCORE = 0;
