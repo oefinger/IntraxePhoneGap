@@ -120,8 +120,7 @@ $('#zoom_up').click(function() {
 function iterateTabMarker() {
 
 	SCROLL_INDEX = SCROLL_INDEX+1;
-	$('.scrollstring').css('margin-left','-' + SCREEN_WIDTH + 'px');
-	//$('.tab_marker').css('left',$('body').css('margin-left'));
+	$('.scrollstring').css('margin-left','-' + SCREEN_WIDTH*SCROLL_INDEX + 'px');
 	moveTabMarker();
 }
 
