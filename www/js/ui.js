@@ -207,7 +207,7 @@ function loadTab() {
 		
 	}
 	
-	END_TIME = lastnote_time + SCROLLPERIOD;
+	END_TIME = lastnote_time + 2800;
 	
 	debugOut('Tab Load Complete...');	
 	
