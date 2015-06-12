@@ -316,8 +316,7 @@ function pause() {
 	clearInterval(scoring_interrupt);	
 	PLAY = false;
 	$('#tab_marker').stop();
-	$('#play_tab').show();
-	//debugOut('PAUSE');		
+	$('#play_tab').show();	
 }
 
 function speedUp() {
@@ -390,7 +389,7 @@ function stopNote(string, fret) {
 
 function updateScoreAndFretboard() {
     
-	CURRENT_TIME = Math.floor((SCROLL_INDEX*(SCREEN_WIDTH-$('body').css('margin-left').replace('px','')) + $('#tab_marker').css('left').replace('px','')-$('body','html').css('margin-left').replace('px',''))/PIXELS_PER_MS);
+	CURRENT_TIME = Math.floor((SCROLL_INDEX*(SCREEN_WIDTH-parseInt($('body').css('margin-left').replace('px',''))) + parseInt($('#tab_marker').css('left').replace('px',''))-parseInt($('body','html').css('margin-left')).replace('px',''))/PIXELS_PER_MS);
 	debugOut(CURRENT_TIME);
 	if(CURRENT_TIME >= END_TIME)
 		pause();
