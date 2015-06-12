@@ -121,7 +121,8 @@ function iterateTabMarker() {
 
 	SCROLL_INDEX = SCROLL_INDEX+1;
 	//$('.scrollstring').css('margin-left','-' + $('.scrollstring').outerWidth() + 'px');
-	moveTabMarker();
+	//moveTabMarker();
+	$('.tab_marker').css('left',$('body').css('margin-left'));
 }
 
 function moveTabMarker() {
