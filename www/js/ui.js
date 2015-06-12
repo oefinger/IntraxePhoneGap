@@ -66,7 +66,7 @@ function reset() {
 	SCROLL_INDEX = 0;
 	SCORE = 0;
 	
-	$('.tab_marker').css('left',$('body').css('margin-left'));
+	$('#tab_marker').css('left',$('body').css('margin-left'));
 	
 	initActual();
 	initActiveTabs();	
@@ -127,8 +127,8 @@ function iterateTabMarker() {
 
 function moveTabMarker() {
 	
-	$('.tab_marker').css('left',$('body').css('margin-left'));
-	$('.tab_marker').animate(
+	$('#tab_marker').css('left',$('body').css('margin-left'));
+	$('#tab_marker').animate(
 		{'left': '+=' + SCREEN_WIDTH},
 		SCROLLPERIOD, 'linear', iterateTabMarker);
 }
@@ -314,7 +314,7 @@ function pause() {
 
 	PLAY = false;
 	$('#play_tab').show();
-	$('.tab_marker').stop();
+	$('#tab_marker').stop();
 	clearInterval(scoring_interrupt);
 	debugOut('PAUSE');		
 }
@@ -389,7 +389,7 @@ function stopNote(string, fret) {
 
 function updateScoreAndFretboard() {
 
-	CURRENT_TIME = Math.floor((SCROLL_INDEX*$('.scrollstring').outerWidth() + $('.tab_marker').css('left').replace('px','')-$('body','html').css('margin-left').replace('px',''))/PIXELS_PER_MS);
+	CURRENT_TIME = Math.floor((SCROLL_INDEX*$('.scrollstring').outerWidth() + $('#tab_marker').css('left').replace('px','')-$('body','html').css('margin-left').replace('px',''))/PIXELS_PER_MS);
 	
 	if(CURRENT_TIME >= END_TIME)
 		pause();
