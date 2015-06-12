@@ -51,7 +51,6 @@ function init() {
 	loadTab();
 	drawFretboard();
 	drawGuitarFretboardFretMarkers();
-	initActual();  
 	showTab();
   
 	debugOut(1000*PIXELS_PER_MS + 'pixels/sec scroll rate');
@@ -67,9 +66,9 @@ function reset() {
 	SCROLL_INDEX = 0;
 	SCORE = 0;
 	
-	//$('.tab_marker').css('left',$('body').css('margin-left').replace('px',''));
 	$('.tab_marker').css('left',$('body').css('margin-left'));
-
+	initActual();  
+	
 }
 
 $('#reset_tab').click(function() {
@@ -324,7 +323,6 @@ function slowDown() {
 
 function zoomDown() {
 
-	// $('.tab_note').css('width',(parseInt($('.tab_note').css('width'))-ZOOM_ADJUST)+'px');
 	if($('.tab_note').outerWidth() > ZOOM_ADJUST) {
 		$('.tab_note').css('width',($('.tab_note').outerWidth()-ZOOM_ADJUST)+'px');
 		debugOut('Zoom Down: ' + $('.tab_note').css('width'));
@@ -333,7 +331,6 @@ function zoomDown() {
 
 function zoomUp() {
 
-	//$('.tab_note').css('width',(parseInt($('.note').css('width'))+ZOOM_ADJUST));
 	$('.tab_note').css('width',($('.tab_note').outerWidth()+ZOOM_ADJUST)+'px');
 	debugOut('Zoom Up: ' +  $('.tab_note').css('width'))
 }
@@ -345,7 +342,7 @@ function zoomUp() {
 function initActual() {
 
 	for(var i=0; i<NUM_STRINGS; i++) {
-		activeStrings.push(-1);                    // -1 means string silent
+		activeStrings[i] = -1;                    // -1 means string silent
 		placeFinger(i+1,0);
 	}
 }
