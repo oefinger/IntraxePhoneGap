@@ -499,7 +499,7 @@ function updateConnectStatus(status) {
 
 function debugOut(string_info) {
 
-	$('#diag1').append(string_info + '<br>');
+	$('#message').html(string_info);
 }
 
 $('#simulate_finger_on').click(function() {
