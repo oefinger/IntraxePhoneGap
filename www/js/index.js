@@ -12,6 +12,14 @@ var connectivity_interrupt;
 var CONNECTIVITY_TIME_INTERVAL = 3000;
 var HEARTBEAT_REPY_TIME = 1000;
 
+var heartbeatTimer;
+
+// wrapper function to call updateConnectStatus in ui.js
+function callUpdateConnectStatus(status) {
+	updateConnectStatus(status);
+}
+
+
 function sendHeartbeat() {
 		
 		var success = function() {    
@@ -26,7 +34,7 @@ function sendHeartbeat() {
         var data = 'H';                                     // Arduino expects H for heartbeat value
         bluetoothSerial.write(data, success, failure);
 		
-		heartbeatTimer = setTimeout(function(){ updateConnectStatus(3) }, HEARTBEAT_REPY_TIME);               // if no response within 1 s, 
+		heartbeatTimer = setTimeout(function(){ callUpdateConnectStatus(3) }, HEARTBEAT_REPY_TIME);               // if no response within 1 s, 
 }
 
 function findPartner(results) {
@@ -115,7 +123,7 @@ var app = {
             app.clear();
             app.display("Attempting to connect. " +
                 "Make sure the serial port is open on the target device.");
-			updateConnectStatus(1);      // updateConnectStatus is in ui.js
+			callUpdateConnectStatus(1);     
             // attempt to connect:
             bluetoothSerial.connect(
                 app.macAddress,  // device to connect to
@@ -133,7 +141,7 @@ var app = {
                 app.closePort,     // stop listening to the port
                 app.showError      // show the error if you fail
             );
-			updateConnectStatus(3);      // updateConnectStatus is in ui.js
+			callUpdateConnectStatus(3);    
         };
 
         // here's the real action of the manageConnection function:
@@ -147,7 +155,7 @@ var app = {
         // if you get a good Bluetooth serial connection:
         //app.display("Connected to: " + app.macAddress);
       
-	    updateConnectStatus(2);      // updateConnectStatus is in ui.js
+	    callUpdateConnectStatus(2);      
 		
         // set up a listener to listen for newlines
 		bluetoothSerial.subscribe('\n', app.onData, app.onError);
@@ -174,7 +182,12 @@ var app = {
 	
 	
 	onData: function(data) { // data received from Arduino
-        processData(data);
+		if(data == 'H') {
+			clearTimeout(heartbeatTimer);
+		}
+		else {
+			processData(data);					// processData is in ui.js
+		}
     },
 	/*
 	sendData: function(event) { // send data to Arduino
