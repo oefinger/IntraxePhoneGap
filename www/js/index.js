@@ -163,7 +163,7 @@ var app = {
 		
 	onData: function(data) {                     // data received from Arduino
 		
-		app.display('REPLY FROM GUITAR');
+		app.display('REPLY FROM GUITAR:' + data);
 		if(data == 'H') {
 		    app.display('AND IT IS H');
 			clearTimeout(heartbeatTimer);
