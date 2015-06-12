@@ -66,12 +66,12 @@ function reset() {
 	SCROLL_INDEX = 0;
 	SCORE = 0;
 	
+	alert($('body').css('margin-left'));
 	$('.tab_marker').css('left',$('body').css('margin-left'));
 	
 	initActual();
 	initActiveTabs();	
 	$('.tab_string_circle').hide().removeClass('.tab_string_circle_hit').removeClass('.tab_string_circle_miss');
-	updateScoreAndFretboard(); 
 	
 }
 
