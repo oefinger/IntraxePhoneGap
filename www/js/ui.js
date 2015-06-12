@@ -3,7 +3,7 @@ var DEBUG = true;
 
 var	LEADIN_TIME = 2000;                              // give 2 second lead-in time
 var END_TIME;
-var SCROLLPERIOD = 10000;                            // initialized and modified based on SPEED;
+var SCROLLPERIOD = 5000;                            // how many ms represented by screenwidth
 var PIXELS_PER_MS;                                   // initialized upon load
 var TIMER_INTERRUPT = 100;                            // in ms, dictates how frequently we look at current actual note vs. tab note for scoring
 var PLAY = false;
@@ -207,7 +207,7 @@ function loadTab() {
 		
 	}
 	
-	END_TIME = lastnote_time + SCROLLPERIOD*2;
+	END_TIME = lastnote_time + SCROLLPERIOD;
 	
 	debugOut('Tab Load Complete...');	
 	
@@ -390,7 +390,7 @@ function stopNote(string, fret) {
 function updateScoreAndFretboard() {
     
 	CURRENT_TIME = Math.floor((SCROLL_INDEX*(SCREEN_WIDTH-parseInt($('body').css('margin-left').replace('px',''))) + parseInt($('#tab_marker').css('left').replace('px',''))-parseInt($('body','html').css('margin-left').replace('px','')))/PIXELS_PER_MS);
-	debugOut(CURRENT_TIME);
+	
 	if(CURRENT_TIME >= END_TIME)
 		pause();
 		
