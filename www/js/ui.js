@@ -66,6 +66,7 @@ function reset() {
 	SCROLL_INDEX = 0;
 	SCORE = 0;
 	
+	$('.scrollstring').css('margin-left','-' + (SCREEN_WIDTH*SCROLL_INDEX-$('body').css('margin-left').replace('px','')) + 'px');
 	$('#tab_marker').css('left',$('body').css('margin-left'));
 	
 	initActual();
