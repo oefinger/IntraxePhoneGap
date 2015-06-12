@@ -68,7 +68,7 @@ function reset() {
 	
 	$('.tab_marker').css('left',$('body').css('margin-left'));
 	initActual();  
-	
+	updateScoreAndFretboard();
 }
 
 $('#reset_tab').click(function() {
