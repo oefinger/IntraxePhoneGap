@@ -39,10 +39,6 @@ $(function() {
 });
 
 function init() {
-
-	CURRENT_TIME = 0;                               
-	SCROLL_INDEX = 0;
-	SCORE = 0;
 	
 	SCREEN_WIDTH = $(window).width();
 	SCREEN_HEIGHT = $(window).height();
@@ -59,14 +55,25 @@ function init() {
 	showTab();
   
 	debugOut(1000*PIXELS_PER_MS + 'pixels/sec scroll rate');
-	$('.tab_marker').css('left',$('body').css('margin-left').replace('px',''));
 	
 	app.initialize();                        // index.js
+	
+	reset();
+}
+
+function reset() {
+
+	CURRENT_TIME = 0;                               
+	SCROLL_INDEX = 0;
+	SCORE = 0;
+	
+	$('.tab_marker').css('left',$('body').css('margin-left').replace('px',''));
+
 }
 
 $('#reset_tab').click(function() {
 
-		init();
+		reset();
 });
 
 $('#play_tab').click(function() {
