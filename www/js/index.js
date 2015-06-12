@@ -162,6 +162,7 @@ var app = {
 		
 		// strip newline
 		data = data.replace(NEWLINE,'');
+		app.display('length:'+data.length);
 		
 		if(data == 'H') {
 		    app.display('AND IT IS H');
