@@ -28,10 +28,6 @@ var activeTabIndex = [];
 
 var scoring_interrupt;
 
-for(var i=0; i<NUM_STRINGS; i++) {
-	Tab[i] = [];
-	activeTabIndex[i] = 0;
-}
 
 $(function() {
   
@@ -40,6 +36,10 @@ $(function() {
 
 function init() {
 	
+	for(var i=0; i<NUM_STRINGS; i++) {
+		Tab[i] = [];
+	}
+
 	SCREEN_WIDTH = $(window).width();
 	SCREEN_HEIGHT = $(window).height();
 	PIXELS_PER_MS = SCREEN_WIDTH/SCROLLPERIOD;
@@ -67,8 +67,17 @@ function reset() {
 	SCORE = 0;
 	
 	$('.tab_marker').css('left',$('body').css('margin-left'));
-	initActual();  
+	initActual();
+
+	initActiveTabs();	
 	updateScoreAndFretboard();
+}
+
+function initActiveTabs() {
+
+	for(var i=0; i<NUM_STRINGS; i++) {
+		activeTabIndex[i] = 0;
+	}
 }
 
 $('#reset_tab').click(function() {
