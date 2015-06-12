@@ -423,7 +423,7 @@ function updateScoreAndFretboard() {
 		}
 	
 	}
-	
+	 
 	$('#score').html(SCORE);
 	
 }
