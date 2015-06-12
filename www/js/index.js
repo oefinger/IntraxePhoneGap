@@ -105,10 +105,6 @@ var app = {
         // connect() will get called only if isConnected() (below) returns failure. In other words, if not connected, then connect:
         var connect = function () {
 		
-            // if not connected, do this:
-            app.clear();
-            app.display("Attempting to connect. " +
-                "Make sure the serial port is open on the target device.");
 			callUpdateConnectStatus(1);  
 			
             // attempt to connect:
@@ -163,7 +159,7 @@ var app = {
 		
 	onData: function(data) {                     // data received from Arduino
 		
-		app.display('lenth:' + data.length + ',code:' + data.charCodeAt(0));
+		app.display('code:' + data.charCodeAt(1)  + ',' + data.charCodeAt(2));
 		if(data == 'H') {
 		    app.display('AND IT IS H');
 			clearTimeout(heartbeatTimer);
