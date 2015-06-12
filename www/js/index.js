@@ -7,6 +7,7 @@
 	Modified 6/10/2015 by Matt Oefinger for Intraxe
 */
 
+var NEWLINE = '\n';
 var PARTNER_NAME = 'HC-06';                                  // look for this Bluetooth partner name
 var connectivity_interrupt;
 var CONNECTIVITY_TIME_INTERVAL = 3000;
@@ -137,7 +138,7 @@ var app = {
 	    callUpdateConnectStatus(2);      
 		
         // set up a listener to listen for newlines
-		bluetoothSerial.subscribe('\n', app.onData, app.onError);
+		bluetoothSerial.subscribe(NEWLINE, app.onData, app.onError);
 
 		// set up ongoing monitoring of the channel
 		connectivity_interrupt = setInterval(sendHeartbeat,CONNECTIVITY_TIME_INTERVAL);
@@ -159,7 +160,9 @@ var app = {
 		
 	onData: function(data) {                     // data received from Arduino
 		
-		app.display('code:' + data.charCodeAt(1)  + ',' + data.charCodeAt(2));
+		// strip newline
+		data = data.replace(NEWLINE,'');
+		
 		if(data == 'H') {
 		    app.display('AND IT IS H');
 			clearTimeout(heartbeatTimer);
