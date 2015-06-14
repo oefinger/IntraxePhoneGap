@@ -126,11 +126,13 @@ function iterateTabMarker() {
 }
 
 function moveTabMarker() {
-	
+	/*
 	$('#tab_marker').css('left',$('body').css('margin-left'));
 	$('#tab_marker').animate(
 		{'left': '+=' + SCREEN_WIDTH},
 		SCROLLPERIOD, 'linear', iterateTabMarker);
+	*/
+	$('#tab_marker').css('transform','translateX(450px)');
 }
 
 var Note = function(string, fret, is_silent, timeInMs) {
