@@ -143,7 +143,7 @@ function moveTabMarker() {
 		SCROLLPERIOD, 'linear', iterateTabMarker);
 	*/
 
-	//$('#tab_marker').css('transform','translateX(' + ANIMATE_WIDTH + 'px)').css('transition-duration', ANIMATE_TIME +'s').css('transition-timing-function','linear');
+	$('#tab_marker').css('transform','translateX(' + ANIMATE_WIDTH + 'px)').css('transition-duration', ANIMATE_TIME +'s').css('transition-timing-function','linear');
 	iterateTabMarker();
 }
 
