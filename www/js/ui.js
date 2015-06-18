@@ -126,10 +126,10 @@ $('#zoom_up').click(function() {
 
 function iterateTabMarker() {
 
-	SCROLL_INDEX = SCROLL_INDEX+1;
+	//SCROLL_INDEX = SCROLL_INDEX+1;
 	//$('.scrollstring').css('margin-left','-' + (SCREEN_WIDTH*SCROLL_INDEX-$('body').css('margin-left').replace('px','')) + 'px');
 	alert('iterate');
-	$('#tab_marker').css('transform','translateX(-' + ANIMATE_WIDTH + 'px)');
+	//$('#tab_marker').css('transform','translateX(-' + ANIMATE_WIDTH + 'px)');
 	//moveTabMarker();
 }
 
@@ -143,7 +143,7 @@ function moveTabMarker() {
 		SCROLLPERIOD, 'linear', iterateTabMarker);
 	*/
 
-	$('#tab_marker').css('transform','translateX(' + ANIMATE_WIDTH + 'px)').css('transition-duration', ANIMATE_TIME +'s').css('transition-timing-function','linear');
+	//$('#tab_marker').css('transform','translateX(' + ANIMATE_WIDTH + 'px)').css('transition-duration', ANIMATE_TIME +'s').css('transition-timing-function','linear');
 	iterateTabMarker();
 }
 
