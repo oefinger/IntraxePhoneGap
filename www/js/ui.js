@@ -126,15 +126,15 @@ function iterateTabMarker() {
 
 	SCROLL_INDEX = SCROLL_INDEX+1;
 	$('.scrollstring').css('margin-left','-' + (SCREEN_WIDTH*SCROLL_INDEX-$('body').css('margin-left').replace('px','')) + 'px');
-	//$('#tab_marker').css('left','0px');
-	$('#tab_marker').css('transform','translateX(-' + ANIMATE_WIDTH + 'px)').css('transition-duration', '0s');//.css('transition-timing-function','linear');
+	$('#tab_marker').css('transform','translateX(-500px)').css('transition-duration', '0s');
 	//moveTabMarker();
 }
 
 function moveTabMarker() {
 
+	/**
     /** JavaScript animation is way too slow - use .css GPU-accelerated animation instead **/
-	/*
+	/**
 	$('#tab_marker').css('left',$('body').css('margin-left'));
 	$('#tab_marker').animate(
 		{'left': '+=' + SCREEN_WIDTH},
