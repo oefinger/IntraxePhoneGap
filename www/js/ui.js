@@ -127,7 +127,7 @@ $('#zoom_up').click(function() {
 function iterateTabMarker() {
 
 	SCROLL_INDEX = SCROLL_INDEX+1;
-	$('.scrollstring').css('margin-left','-' + (SCREEN_WIDTH*SCROLL_INDEX-$('body').css('margin-left').replace('px','')) + 'px');
+	//$('.scrollstring').css('margin-left','-' + (SCREEN_WIDTH*SCROLL_INDEX-$('body').css('margin-left').replace('px','')) + 'px');
 	$('#tab_marker').css('transform','translateX(-' + ANIMATE_WIDTH + 'px)');
 	//moveTabMarker();
 }
