@@ -146,7 +146,7 @@ function moveTabMarker() {
 	$('#tab_marker').css('transform','translateX(' + ANIMATE_WIDTH + 'px)').css('transition-duration', ANIMATE_TIME +'s').css('transition-timing-function','linear');
 	
 	// CSS above occurs asynchronously from this main thread. Force pause before performing iterateTabMarker
-	animate_timer = setTimeout(iterateTabMarker, ANIMATE_TIME);
+	//animate_timer = setTimeout(iterateTabMarker, ANIMATE_TIME);
 
 }
 
