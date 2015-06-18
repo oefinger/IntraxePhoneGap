@@ -126,7 +126,7 @@ function iterateTabMarker() {
 
 	SCROLL_INDEX = SCROLL_INDEX+1;
 	$('.scrollstring').css('margin-left','-' + (SCREEN_WIDTH*SCROLL_INDEX-$('body').css('margin-left').replace('px','')) + 'px');
-	$('#tab_marker').css('transform','translateX(-100%)').css('transition-duration', '0s');
+	$('#tab_marker').css('transform','translateX(-500px)').css('transition-duration', '0s');
 	//moveTabMarker();
 }
 
@@ -140,8 +140,8 @@ function moveTabMarker() {
 		{'left': '+=' + SCREEN_WIDTH},
 		SCROLLPERIOD, 'linear', iterateTabMarker);
 	*/
-//' + ANIMATE_WIDTH + 'px
-	$('#tab_marker').css('transform','translateX(100%)').css('transition-duration', SCROLLPERIOD/1000 +'s').css('transition-timing-function','linear');
+
+	$('#tab_marker').css('transform','translateX(' + ANIMATE_WIDTH + 'px)').css('transition-duration', SCROLLPERIOD/1000 +'s').css('transition-timing-function','linear');
 	
 	// CSS above occurs asynchronously from this main thread. Force pause before performing iterateTabMarker
 	animate_timer = setTimeout(iterateTabMarker, SCROLLPERIOD);
