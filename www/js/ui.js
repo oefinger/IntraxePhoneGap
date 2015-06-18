@@ -22,6 +22,9 @@ var CONNECTION_STATUS = 0;
 var SCREEN_WIDTH;
 var SCREEN_HEIGHT;
 
+var ANIMATE_WIDTH;
+var ANIMATE_TIME;
+
 var activeStrings = [];
 var Tab = [];                                       // Tab is 2-d array - string number, time
 var activeTabIndex = [];
@@ -43,6 +46,9 @@ function init() {
 	SCREEN_WIDTH = $(window).width();
 	SCREEN_HEIGHT = $(window).height();
 	PIXELS_PER_MS = SCREEN_WIDTH/SCROLLPERIOD;
+
+	ANIMATE_WIDTH = SCREEN_WIDTH-(parseInt($('body').css('margin-left').replace('px',''))+parseInt($('body').css('margin-right').replace('px','')));
+	ANIMATE_TIME = SCROLLPERIOD/1000;
 
 	if(!DEBUG) {
 		$('.debug').hide();
@@ -122,6 +128,7 @@ function iterateTabMarker() {
 
 	SCROLL_INDEX = SCROLL_INDEX+1;
 	$('.scrollstring').css('margin-left','-' + (SCREEN_WIDTH*SCROLL_INDEX-$('body').css('margin-left').replace('px','')) + 'px');
+	$('#tab_marker').css('transform','translateX(0px)');
 	moveTabMarker();
 }
 
@@ -134,12 +141,9 @@ function moveTabMarker() {
 		{'left': '+=' + SCREEN_WIDTH},
 		SCROLLPERIOD, 'linear', iterateTabMarker);
 	*/
-	
-	var animatewidth = SCREEN_WIDTH-(parseInt($('body').css('margin-left').replace('px',''))+parseInt($('body').css('margin-right').replace('px','')));
-	var animatetime = SCROLLPERIOD/1000;
 
-	$('#tab_marker').css('transform','translateX(' + animatewidth + 'px)').css('transition-duration', animatetime +'s').css('transition-timing-function','linear');
-
+	$('#tab_marker').css('transform','translateX(' + ANIMATE_WIDTH + 'px)').css('transition-duration', ANIMATE_TIME +'s').css('transition-timing-function','linear');
+	iterateTabMarker();
 }
 
 var Note = function(string, fret, is_silent, timeInMs) {
