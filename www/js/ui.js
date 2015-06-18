@@ -30,7 +30,7 @@ var Tab = [];                                       // Tab is 2-d array - string
 var activeTabIndex = [];
 
 var scoring_interrupt;
-
+var animate_timer;
 
 $(function() {
   
@@ -144,7 +144,10 @@ function moveTabMarker() {
 	*/
 
 	$('#tab_marker').css('transform','translateX(' + ANIMATE_WIDTH + 'px)').css('transition-duration', ANIMATE_TIME +'s').css('transition-timing-function','linear');
-	iterateTabMarker();
+	
+	// CSS above occurs asynchronously from this main thread. Force pause before performing iterateTabMarker
+	animate_timer = setTimeout(iterateTabMarker, ANIMATE_TIME);
+
 }
 
 var Note = function(string, fret, is_silent, timeInMs) {
