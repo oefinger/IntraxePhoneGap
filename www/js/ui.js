@@ -23,7 +23,6 @@ var SCREEN_WIDTH;
 var SCREEN_HEIGHT;
 
 var ANIMATE_WIDTH;
-var ANIMATE_TIME;
 
 var activeStrings = [];
 var Tab = [];                                       // Tab is 2-d array - string number, time
@@ -48,7 +47,6 @@ function init() {
 	PIXELS_PER_MS = SCREEN_WIDTH/SCROLLPERIOD;
 
 	ANIMATE_WIDTH = SCREEN_WIDTH-(parseInt($('body').css('margin-left').replace('px',''))+parseInt($('body').css('margin-right').replace('px','')));
-	ANIMATE_TIME = SCROLLPERIOD/1000;
 
 	if(!DEBUG) {
 		$('.debug').hide();
@@ -143,10 +141,10 @@ function moveTabMarker() {
 		SCROLLPERIOD, 'linear', iterateTabMarker);
 	*/
 
-	$('#tab_marker').css('transform','translateX(' + ANIMATE_WIDTH + 'px)').css('transition-duration', ANIMATE_TIME +'s').css('transition-timing-function','linear');
+	$('#tab_marker').css('transform','translateX(' + ANIMATE_WIDTH + 'px)').css('transition-duration', SCROLLPERIOD/1000 +'s').css('transition-timing-function','linear');
 	
 	// CSS above occurs asynchronously from this main thread. Force pause before performing iterateTabMarker
-	//animate_timer = setTimeout(iterateTabMarker, ANIMATE_TIME);
+	animate_timer = setTimeout(iterateTabMarker, SCROLLPERIOD);
 
 }
 
