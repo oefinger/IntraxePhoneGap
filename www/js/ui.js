@@ -365,17 +365,24 @@ function speedUp() {
 
 	SCROLLPERIOD *= 0.9;
 	PIXELS_PER_MS_SCROLL = SCREEN_WIDTH/SCROLLPERIOD;
+	
 	pause();                        // force redraw of marker based on new PIXELS_PER_MS_SCROLL
-	play();
+	
+	if(PLAY == true) {              // if speed was modified while in play mode, keep playing
+		play();
+	}
 }
 
 function slowDown() {
 
-	pause();
 	SCROLLPERIOD *= 1.1;
 	PIXELS_PER_MS_SCROLL = SCREEN_WIDTH/SCROLLPERIOD;
+
 	pause();                        // force redraw of marker based on new PIXELS_PER_MS_SCROLL
-	play();
+	
+	if(PLAY == true) {              // if speed was modified while in play mode, keep playing
+		play();
+	}
 }
 
 function zoomDown() {
