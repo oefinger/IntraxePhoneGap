@@ -75,6 +75,7 @@ function reset() {
 	CURRENT_TIME = 0;                               
 	SCROLL_INDEX = 0;
 	SCORE = 0;
+	SCROLLPERIOD = WINDOWPERIOD;
 	
 	$('.scrollstring').css('margin-left','0px');
 	$('#tab_marker').css('left','0px');
