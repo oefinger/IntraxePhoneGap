@@ -152,7 +152,7 @@ hr {
 	position:absolute;
 }
 
-.tab_marker {
+#tab_marker {
 	position:absolute;
 	height;100%;
 	background-color:red;

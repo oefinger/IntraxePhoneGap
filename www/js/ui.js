@@ -141,10 +141,11 @@ function moveTabMarker() {
 		SCROLLPERIOD, 'linear', iterateTabMarker);
 	*/
   
-    $('#tab_marker_wrapper').html('<div id="tab_marker_' + SCROLL_INDEX + '" class="tab_marker">&nbsp;</div>');
-	$('#tab_marker_' + SCROLL_INDEX).css('transform','translateX(' + ANIMATE_WIDTH + 'px)').css('transition-duration', SCROLLPERIOD/1000 +'s').css('transition-timing-function','linear');
+    //$('#tab_marker_wrapper').html('<div id="tab_marker_' + SCROLL_INDEX + '" class="tab_marker">&nbsp;</div>');
+	$('#tab_marker_wrapper').html('<div id="tab_marker">&nbsp;</div>');
+	$('#tab_marker').css('transform','translateX(' + ANIMATE_WIDTH + 'px)').css('transition-duration', SCROLLPERIOD/1000 +'s').css('transition-timing-function','linear');
 	
-	sroll_timestamp = new Date(); //"now"
+	scroll_timestamp = new Date(); //"now"
 	
 	// CSS above occurs asynchronously from this main thread. Force pause before performing iterateTabMarker
 	animate_timer = setTimeout(iterateTabMarker, SCROLLPERIOD);
@@ -341,7 +342,8 @@ function pause() {
 	var now = new Date()  
     var diff = Math.abs(scroll_timestamp - now);                                // difference in milliseconds
 
-	$('#tab_marker_wrapper').html('<div id="tab_marker_' + SCROLL_INDEX + '" class="tab_marker">&nbsp;</div>').css('left','100px');
+	//$('#tab_marker_wrapper').html('<div id="tab_marker_' + SCROLL_INDEX + '" class="tab_marker">&nbsp;</div>').css('left','100px');
+	//$('#tab_marker_wrapper').html('<div id="tab_marker">&nbsp;</div>').css('left','100px');
 
 }
 
