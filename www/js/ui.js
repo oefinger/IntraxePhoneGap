@@ -344,15 +344,19 @@ function pause() {
     var diff = Math.abs(scroll_timestamp - now);                                // difference in milliseconds
 
 	clearInterval(scoring_interrupt);	
-	PLAY = false;
 	$('#play_tab').show();	
 	clearTimeout(animate_timer);
 	
-	// $('.tab_marker').css('animation-play-state','paused');                   // browser bug prevents this from working currently
-	
-	$('#tab_marker_wrapper').html('<div id="tab_marker">&nbsp;</div>');         // kill the currently animating tab_marker by creating a new one
-	$('#tab_marker').css('left',(diff*PIXELS_PER_MS_SCROLL)+'px');
-	
+	// $('.tab_marker').css('animation-play-state','paused');                   // browser bug prevents this from working currently - several users on forums report same
+		
+	if(PLAY == true) {
+		PLAY = false;
+		$('#tab_marker_wrapper').html('<div id="tab_marker">&nbsp;</div>');         // kill the currently animating tab_marker by creating a new one
+		$('#tab_marker').css('left',(diff*PIXELS_PER_MS_SCROLL)+'px');
+	}	
+	else {
+		alert('already');
+	}
 }
 
 function speedUp() {
