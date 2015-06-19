@@ -328,7 +328,7 @@ function play() {
 
 function pause() {
 
-	$('#tab_marker_' + SCROLL_INDEX).css('animation-play-state','paused');
+	$('.tab_marker').css('animation-play-state','paused');
 	clearInterval(scoring_interrupt);	
 	PLAY = false;
 	$('#play_tab').show();	
