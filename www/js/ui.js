@@ -106,7 +106,6 @@ $('#play_tab').click(function() {
 $('#pause_tab').click(function() {
 
 		pause();
-		PLAY == false;
 });
 
 $('#speed_up').click(function() {
@@ -362,6 +361,7 @@ function pause() {
 		$('#tab_marker').css('left',(PAUSE_DELTA*PIXELS_PER_MS_SCROLL)+'px');
 	}
 	
+	PLAY == false;
 }
 
 function speedUp() {
