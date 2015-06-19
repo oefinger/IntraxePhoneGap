@@ -3,10 +3,12 @@ var DEBUG = true;
 
 var	LEADIN_TIME = 2000;                              // give 2 second lead-in time
 var END_TIME;
-var WINDOWPERIOD = 5000;                            // how many ms represented by screenwidth
-var SCROLLPERIOD;
-var PIXELS_PER_MS;                                   // initialized upon load
-var TIMER_INTERRUPT = 100;                            // in ms, dictates how frequently we look at current actual note vs. tab note for scoring
+var WINDOWPERIOD = 5000;                             // how many ms represented by screenwidth - in real tab time
+var SCROLLPERIOD;                                    // how many ms for scroll, time adjust may not be 1:1 with windowperiod
+var PIXELS_PER_MS_WINDOW;                            // initialized upon load
+var PIXELS_PER_MS_SCROLL;                            // initialized upon load
+
+var TIMER_INTERRUPT = 100;                           // in ms, dictates how frequently we look at current actual note vs. tab note for scoring
 var PLAY = false;
 var CURRENT_TIME = 0;                                // increments with scroll so that we know where in music we are 
 var SCROLL_INDEX = 0;
@@ -43,11 +45,12 @@ function init() {
 	for(var i=0; i<NUM_STRINGS; i++) {
 		Tab[i] = [];
 	}
-	
-    SCROLLPERIOD = WINDOWPERIOD;
+
+	SCROLLPERIOD = WINDOWPERIOD;
 	SCREEN_WIDTH = $(window).width();
 	SCREEN_HEIGHT = $(window).height();
-	PIXELS_PER_MS = SCREEN_WIDTH/WINDOWPERIOD;
+	PIXELS_PER_MS_WINDOW = SCREEN_WIDTH/WINDOWPERIOD;
+	PIXELS_PER_MS_SCROLL = SCREEN_WIDTH/SCROLLPERIOD;
 
 	ANIMATE_WIDTH = SCREEN_WIDTH-(parseInt($('body').css('margin-left').replace('px',''))+parseInt($('body').css('margin-right').replace('px','')));
 
@@ -60,7 +63,7 @@ function init() {
 	drawGuitarFretboardFretMarkers();
 	showTab();
   
-	debugOut(1000*PIXELS_PER_MS + 'pixels/sec scroll rate');
+	debugOut(1000*PIXELS_PER_MS_SCROLL + 'pixels/sec scroll rate');
 	
 	app.initialize();                        // index.js
 	
@@ -72,7 +75,7 @@ function reset() {
 	CURRENT_TIME = 0;                               
 	SCROLL_INDEX = 0;
 	SCORE = 0;
-	3erd
+	
 	$('.scrollstring').css('margin-left','0px');
 	$('#tab_marker').css('left','0px');
 	
@@ -143,7 +146,7 @@ function moveTabMarker() {
 	$('#tab_marker').css('left',$('body').css('margin-left'));
 	$('#tab_marker').animate(
 		{'left': '+=' + SCREEN_WIDTH},
-		WINDOWPERIOD, 'linear', iterateTabMarker);
+		SCROLLPERIOD, 'linear', iterateTabMarker);
 	*/
   
     var anim_width = ANIMATE_WIDTH - parseInt($('#tab_marker').css('left').replace('px','')); 
@@ -153,7 +156,7 @@ function moveTabMarker() {
 	scroll_timestamp = new Date(); //"now"
 	
 	// CSS above occurs asynchronously from this main thread. Force pause before performing iterateTabMarker
-	animate_timer = setTimeout(iterateTabMarker, WINDOWPERIOD);
+	animate_timer = setTimeout(iterateTabMarker, scrollperiod);
 
 }
 
@@ -244,7 +247,7 @@ function showTab() {
 	for(i=0; i < NUM_STRINGS; i++) {
 		for(j=0; j < (Tab[i].length-1); j++) {
 		    thisnote = Tab[i][j];
-			width = (Tab[i][j+1].time - thisnote.time)*PIXELS_PER_MS;
+			width = (Tab[i][j+1].time - thisnote.time)*PIXELS_PER_MS_WINDOW;
 		    html_transcribe = '<div class="tab_note" style="width:' + width + 'px">' + (thisnote.is_silent ? 'x':thisnote.fret) + '</div>';
 		    $('#string_'+(i+1)).append(html_transcribe);    
 		}
@@ -348,19 +351,19 @@ function pause() {
 	// $('.tab_marker').css('animation-play-state','paused');                   // browser bug prevents this from working currently
 	
 	$('#tab_marker_wrapper').html('<div id="tab_marker">&nbsp;</div>');         // kill the currently animating tab_marker by creating a new one
-	$('#tab_marker').css('left',(diff*PIXELS_PER_MS)+'px');
+	$('#tab_marker').css('left',(diff*PIXELS_PER_MS_SCROLL)+'px');
 	
 }
 
 function speedUp() {
 
-	WINDOWPERIOD *= 0.9;
+	SCROLLPERIOD *= 0.9;
 	debugOut('Speed Up');
 }
 
 function slowDown() {
 
-	WINDOWPERIOD *= 1.1;
+	SCROLLPERIOD *= 1.1;
 	debugOut('Slow Down');
 }
 
@@ -423,7 +426,7 @@ function updateScoreAndFretboard() {
 	var now = new Date()  
     var diff = Math.abs(scroll_timestamp - now);                                // difference in milliseconds
 	
-	CURRENT_TIME = SCROLL_INDEX*WINDOWPERIOD + diff;
+	CURRENT_TIME = SCROLL_INDEX*SCROLLPERIOD + diff;
 	
 	if(CURRENT_TIME >= END_TIME)
 		pause();
