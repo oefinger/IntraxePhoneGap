@@ -30,6 +30,7 @@ var activeTabIndex = [];
 
 var scoring_interrupt;
 var animate_timer;
+var scroll_timestamp;
 
 $(function() {
   
@@ -142,6 +143,8 @@ function moveTabMarker() {
   
     $('#tab_marker_wrapper').html('<div id="tab_marker_' + SCROLL_INDEX + '" class="tab_marker">&nbsp;</div>');
 	$('#tab_marker_' + SCROLL_INDEX).css('transform','translateX(' + ANIMATE_WIDTH + 'px)').css('transition-duration', SCROLLPERIOD/1000 +'s').css('transition-timing-function','linear');
+	
+	sroll_timestamp = new Date(); //"now"
 	
 	// CSS above occurs asynchronously from this main thread. Force pause before performing iterateTabMarker
 	animate_timer = setTimeout(iterateTabMarker, SCROLLPERIOD);
@@ -328,12 +331,18 @@ function play() {
 
 function pause() {
 
-	// $('.tab_marker').css('animation-play-state','paused');                  // browser bug prevents this from working currently
-	$('#tab_marker_wrapper').html('');                                         // until animate pause bug is fixed, just remove the div                 
 	clearInterval(scoring_interrupt);	
 	PLAY = false;
 	$('#play_tab').show();	
 	clearTimeout(animate_timer);
+	
+	// $('.tab_marker').css('animation-play-state','paused');                  // browser bug prevents this from working currently
+	
+	var now = new Date()  
+    var diff = Math.abs(scroll_timestamp - now);                                // difference in milliseconds
+
+	$('#tab_marker_wrapper').html('<div id="tab_marker_' + SCROLL_INDEX + '" class="tab_marker">&nbsp;</div>').css('left','100px');
+
 }
 
 function speedUp() {
