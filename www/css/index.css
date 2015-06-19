@@ -148,6 +148,10 @@ hr {
 	position:fixed;
 }
 
+#tab_marker_wrapper {
+	position:absolute;
+}
+
 .tab_marker {
 	position:absolute;
 	height;100%;
