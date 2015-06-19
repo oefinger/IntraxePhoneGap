@@ -359,6 +359,8 @@ function pause() {
 	else {
 		$('#tab_marker').css('left',(PAUSE_DELTA*PIXELS_PER_MS_SCROLL)+'px');
 	}
+	
+	PLAY == false;
 }
 
 function speedUp() {
