@@ -141,7 +141,6 @@ function moveTabMarker() {
 		SCROLLPERIOD, 'linear', iterateTabMarker);
 	*/
   
-	$('#tab_marker_wrapper').html('<div id="tab_marker">&nbsp;</div>');
 	$('#tab_marker').css('transform','translateX(' + ANIMATE_WIDTH + 'px)').css('transition-duration', SCROLLPERIOD/1000 +'s').css('transition-timing-function','linear');
 	
 	scroll_timestamp = new Date(); //"now"
@@ -331,6 +330,9 @@ function play() {
 
 function pause() {
 
+    var now = new Date()  
+    var diff = Math.abs(scroll_timestamp - now);                                // difference in milliseconds
+
 	clearInterval(scoring_interrupt);	
 	PLAY = false;
 	$('#play_tab').show();	
@@ -338,15 +340,9 @@ function pause() {
 	
 	// $('.tab_marker').css('animation-play-state','paused');                   // browser bug prevents this from working currently
 	
-	var now = new Date()  
-    var diff = Math.abs(scroll_timestamp - now);                                // difference in milliseconds
-
 	$('#tab_marker_wrapper').html('<div id="tab_marker">&nbsp;</div>');         // kill the currently animating tab_marker by creating a new one
 	$('#tab_marker').css('left',(diff*PIXELS_PER_MS)+'px');
 	
-	//$('#tab_marker_wrapper').html('<div id="tab_marker_' + SCROLL_INDEX + '" class="tab_marker">&nbsp;</div>').css('left','100px');
-	//$('#tab_marker_wrapper').html('<div id="tab_marker">&nbsp;</div>').css('left','100px');
-
 }
 
 function speedUp() {
