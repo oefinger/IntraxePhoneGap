@@ -3,7 +3,8 @@ var DEBUG = true;
 
 var	LEADIN_TIME = 2000;                              // give 2 second lead-in time
 var END_TIME;
-var SCROLLPERIOD = 5000;                            // how many ms represented by screenwidth
+var WINDOWPERIOD = 5000;                            // how many ms represented by screenwidth
+var SCROLLPERIOD;
 var PIXELS_PER_MS;                                   // initialized upon load
 var TIMER_INTERRUPT = 100;                            // in ms, dictates how frequently we look at current actual note vs. tab note for scoring
 var PLAY = false;
@@ -42,10 +43,11 @@ function init() {
 	for(var i=0; i<NUM_STRINGS; i++) {
 		Tab[i] = [];
 	}
-
+	
+    SCROLLPERIOD = WINDOWPERIOD;
 	SCREEN_WIDTH = $(window).width();
 	SCREEN_HEIGHT = $(window).height();
-	PIXELS_PER_MS = SCREEN_WIDTH/SCROLLPERIOD;
+	PIXELS_PER_MS = SCREEN_WIDTH/WINDOWPERIOD;
 
 	ANIMATE_WIDTH = SCREEN_WIDTH-(parseInt($('body').css('margin-left').replace('px',''))+parseInt($('body').css('margin-right').replace('px','')));
 
@@ -70,9 +72,9 @@ function reset() {
 	CURRENT_TIME = 0;                               
 	SCROLL_INDEX = 0;
 	SCORE = 0;
-	
+	3erd
 	$('.scrollstring').css('margin-left','0px');
-	$('#tab_marker').css('left',$('body').css('margin-left'));
+	$('#tab_marker').css('left','0px');
 	
 	initActual();
 	initActiveTabs();	
@@ -141,7 +143,7 @@ function moveTabMarker() {
 	$('#tab_marker').css('left',$('body').css('margin-left'));
 	$('#tab_marker').animate(
 		{'left': '+=' + SCREEN_WIDTH},
-		SCROLLPERIOD, 'linear', iterateTabMarker);
+		WINDOWPERIOD, 'linear', iterateTabMarker);
 	*/
   
     var anim_width = ANIMATE_WIDTH - parseInt($('#tab_marker').css('left').replace('px','')); 
@@ -151,7 +153,7 @@ function moveTabMarker() {
 	scroll_timestamp = new Date(); //"now"
 	
 	// CSS above occurs asynchronously from this main thread. Force pause before performing iterateTabMarker
-	animate_timer = setTimeout(iterateTabMarker, scrollperiod);
+	animate_timer = setTimeout(iterateTabMarker, WINDOWPERIOD);
 
 }
 
@@ -225,7 +227,7 @@ function loadTab() {
 		writeStringSilence(k+1,lastnote_time+2400);
 		writeStringSilence(k+1,lastnote_time+2600);
 		writeStringSilence(k+1,lastnote_time+2800);
-		writeStringSilence(k+1,lastnote_time+SCROLLPERIOD);
+		writeStringSilence(k+1,lastnote_time+WINDOWPERIOD);
 		
 	}
 	
@@ -352,15 +354,13 @@ function pause() {
 
 function speedUp() {
 
-	SCROLLPERIOD *= 0.9;
-	updateScrollPeriod();
+	WINDOWPERIOD *= 0.9;
 	debugOut('Speed Up');
 }
 
 function slowDown() {
 
-	SCROLLPERIOD *= 1.1;
-	updateScrollPeriod();
+	WINDOWPERIOD *= 1.1;
 	debugOut('Slow Down');
 }
 
@@ -423,8 +423,7 @@ function updateScoreAndFretboard() {
 	var now = new Date()  
     var diff = Math.abs(scroll_timestamp - now);                                // difference in milliseconds
 	
-	//CURRENT_TIME = Math.floor((SCROLL_INDEX*(SCREEN_WIDTH-parseInt($('body').css('margin-left').replace('px',''))) + parseInt($('#tab_marker').css('left').replace('px',''))-parseInt($('body','html').css('margin-left').replace('px','')))/PIXELS_PER_MS);
-	CURRENT_TIME = SCROLL_INDEX*SCROLLPERIOD + diff;
+	CURRENT_TIME = SCROLL_INDEX*WINDOWPERIOD + diff;
 	
 	if(CURRENT_TIME >= END_TIME)
 		pause();
