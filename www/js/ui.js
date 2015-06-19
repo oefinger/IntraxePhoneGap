@@ -358,12 +358,17 @@ function pause() {
 function speedUp() {
 
 	SCROLLPERIOD *= 0.9;
+	PIXELS_PER_MS_SCROLL = SCREEN_WIDTH/SCROLLPERIOD;
+	pause();
 	debugOut('Speed Up');
 }
 
 function slowDown() {
 
+	pause();
 	SCROLLPERIOD *= 1.1;
+	PIXELS_PER_MS_SCROLL = SCREEN_WIDTH/SCROLLPERIOD;
+	pause();
 	debugOut('Slow Down');
 }
 
@@ -426,7 +431,7 @@ function updateScoreAndFretboard() {
 	var now = new Date()  
     var diff = Math.abs(scroll_timestamp - now);                                // difference in milliseconds
 	
-	CURRENT_TIME = SCROLL_INDEX*SCROLLPERIOD + diff;
+	CURRENT_TIME = SCROLL_INDEX*WINDOWPERIOD + diff*(WINDOWPERIOD/SCROLLPERIOD);
 	
 	if(CURRENT_TIME >= END_TIME)
 		pause();
