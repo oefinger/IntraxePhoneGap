@@ -118,16 +118,6 @@ $('#slow_down').click(function() {
 		slowDown();
 });
 
-$('#zoom_down').click(function() {
-
-		zoomDown();
-});
-
-$('#zoom_up').click(function() {
-
-		zoomUp();
-});
-
 function iterateTabMarker() {
 
     $('#tab_marker_wrapper').html('<div id="tab_marker">&nbsp;</div>');         // kill the currently animating tab_marker by creating a new one
@@ -386,20 +376,6 @@ function slowDown() {
 
 	SCROLLPERIOD *= 1.1;
 	speedChange();
-}
-
-function zoomDown() {
-
-	if($('.tab_note').outerWidth() > ZOOM_ADJUST) {
-		$('.tab_note').css('width',($('.tab_note').outerWidth()-ZOOM_ADJUST)+'px');
-		debugOut('Zoom Down: ' + $('.tab_note').css('width'));
-	}
-}
-
-function zoomUp() {
-
-	$('.tab_note').css('width',($('.tab_note').outerWidth()+ZOOM_ADJUST)+'px');
-	debugOut('Zoom Up: ' +  $('.tab_note').css('width'))
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
