@@ -141,12 +141,14 @@ function moveTabMarker() {
 		SCROLLPERIOD, 'linear', iterateTabMarker);
 	*/
   
-	$('#tab_marker').css('transform','translateX(' + ANIMATE_WIDTH + 'px)').css('transition-duration', SCROLLPERIOD/1000 +'s').css('transition-timing-function','linear');
+    var anim_width = ANIMATE_WIDTH - parseInt($('#tab_marker').css('left').replace('px','')); 
+	var scrollperiod = (anim_width/ANIMATE_WIDTH)*SCROLLPERIOD;
+	$('#tab_marker').css('transform','translateX(' + anim_width + 'px)').css('transition-duration', scrollperiod/1000 +'s').css('transition-timing-function','linear');
 	
 	scroll_timestamp = new Date(); //"now"
 	
 	// CSS above occurs asynchronously from this main thread. Force pause before performing iterateTabMarker
-	animate_timer = setTimeout(iterateTabMarker, SCROLLPERIOD);
+	animate_timer = setTimeout(iterateTabMarker, scrollperiod);
 
 }
 
