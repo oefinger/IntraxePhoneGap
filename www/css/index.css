@@ -148,7 +148,7 @@ hr {
 	position:fixed;
 }
 
-#tab_marker {
+.tab_marker {
 	position:absolute;
 	height;100%;
 	background-color:red;
