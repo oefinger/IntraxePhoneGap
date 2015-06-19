@@ -354,35 +354,38 @@ function pause() {
 		PAUSE_DELTA = Math.abs(scroll_timestamp - now);                             // difference in milliseconds
 		$('#tab_marker_wrapper').html('<div id="tab_marker">&nbsp;</div>');         // kill the currently animating tab_marker by creating a new one
 		$('#tab_marker').css('left',(PAUSE_DELTA*PIXELS_PER_MS_SCROLL)+'px');
-		PLAY = false;
 	}	
 	else {
 		$('#tab_marker').css('left',(PAUSE_DELTA*PIXELS_PER_MS_SCROLL)+'px');
 	}
+	
+	PLAY = false;
+
+}
+
+function speedChange() {
+
+	var is_paused = !PLAY;           // local state variable -- global PLAY will be modified when pause() is called below
+	PIXELS_PER_MS_SCROLL = SCREEN_WIDTH/SCROLLPERIOD;
+	
+	pause();                        // force redraw of marker based on new PIXELS_PER_MS_SCROLL
+	
+	if(!is_paused) {              // if speed was modified while in play mode, keep playing
+		play();
+	}
+
 }
 
 function speedUp() {
 
 	SCROLLPERIOD *= 0.9;
-	PIXELS_PER_MS_SCROLL = SCREEN_WIDTH/SCROLLPERIOD;
-	
-	pause();                        // force redraw of marker based on new PIXELS_PER_MS_SCROLL
-	
-	if(PLAY == true) {              // if speed was modified while in play mode, keep playing
-		play();
-	}
+	speedChange();
 }
 
 function slowDown() {
 
 	SCROLLPERIOD *= 1.1;
-	PIXELS_PER_MS_SCROLL = SCREEN_WIDTH/SCROLLPERIOD;
-
-	pause();                        // force redraw of marker based on new PIXELS_PER_MS_SCROLL
-	
-	if(PLAY == true) {              // if speed was modified while in play mode, keep playing
-		play();
-	}
+	speedChange();
 }
 
 function zoomDown() {
