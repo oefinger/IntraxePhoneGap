@@ -75,7 +75,6 @@ function reset() {
 	CURRENT_TIME = 0;                               
 	SCROLL_INDEX = 0;
 	SCORE = 0;
-	SCROLLPERIOD = WINDOWPERIOD;
 	
 	$('.scrollstring').css('margin-left','0px');
 	$('#tab_marker').css('left','0px');
@@ -106,7 +105,6 @@ $('#play_tab').click(function() {
 	
 $('#pause_tab').click(function() {
 
-		PLAY = false;
 		pause();
 });
 
@@ -350,21 +348,17 @@ function pause() {
 	clearTimeout(animate_timer);
 	
 	// $('.tab_marker').css('animation-play-state','paused');                       // browser bug prevents this from working currently - several users on forums report same
-	$('#tab_marker_wrapper').html('<div id="tab_marker">&nbsp;</div>');         // kill the currently animating tab_marker by creating a new one
-	
+		
 	if(PLAY == true) {
 		var now = new Date();
 		PAUSE_DELTA = Math.abs(scroll_timestamp - now);                             // difference in milliseconds
 		$('#tab_marker_wrapper').html('<div id="tab_marker">&nbsp;</div>');         // kill the currently animating tab_marker by creating a new one
 		$('#tab_marker').css('left',(PAUSE_DELTA*PIXELS_PER_MS_SCROLL)+'px');
-		//PLAY = false;
+		PLAY = false;
 	}	
 	else {
-	
 		$('#tab_marker').css('left',(PAUSE_DELTA*PIXELS_PER_MS_SCROLL)+'px');
 	}
-	
-	PLAY == false;
 }
 
 function speedUp() {
