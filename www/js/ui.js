@@ -336,12 +336,14 @@ function pause() {
 	$('#play_tab').show();	
 	clearTimeout(animate_timer);
 	
-	// $('.tab_marker').css('animation-play-state','paused');                  // browser bug prevents this from working currently
+	// $('.tab_marker').css('animation-play-state','paused');                   // browser bug prevents this from working currently
 	
 	var now = new Date()  
     var diff = Math.abs(scroll_timestamp - now);                                // difference in milliseconds
 
+	$('#tab_marker_wrapper').html('<div id="tab_marker">&nbsp;</div>');         // kill the currently animating tab_marker by creating a new one
 	$('#tab_marker').css('left',(diff*PIXELS_PER_MS)+'px');
+	
 	//$('#tab_marker_wrapper').html('<div id="tab_marker_' + SCROLL_INDEX + '" class="tab_marker">&nbsp;</div>').css('left','100px');
 	//$('#tab_marker_wrapper').html('<div id="tab_marker">&nbsp;</div>').css('left','100px');
 
