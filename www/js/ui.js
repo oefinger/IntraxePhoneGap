@@ -420,7 +420,11 @@ function stopNote(string, fret) {
 
 function updateScoreAndFretboard() {
     
-	CURRENT_TIME = Math.floor((SCROLL_INDEX*(SCREEN_WIDTH-parseInt($('body').css('margin-left').replace('px',''))) + parseInt($('#tab_marker').css('left').replace('px',''))-parseInt($('body','html').css('margin-left').replace('px','')))/PIXELS_PER_MS);
+	var now = new Date()  
+    var diff = Math.abs(scroll_timestamp - now);                                // difference in milliseconds
+	
+	//CURRENT_TIME = Math.floor((SCROLL_INDEX*(SCREEN_WIDTH-parseInt($('body').css('margin-left').replace('px',''))) + parseInt($('#tab_marker').css('left').replace('px',''))-parseInt($('body','html').css('margin-left').replace('px','')))/PIXELS_PER_MS);
+	CURRENT_TIME = SCROLL_INDEX*SCROLLPERIOD + diff;
 	
 	if(CURRENT_TIME >= END_TIME)
 		pause();
