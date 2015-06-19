@@ -106,6 +106,7 @@ $('#play_tab').click(function() {
 $('#pause_tab').click(function() {
 
 		pause();
+		PLAY == false;
 });
 
 $('#speed_up').click(function() {
@@ -350,17 +351,17 @@ function pause() {
 	// $('.tab_marker').css('animation-play-state','paused');                       // browser bug prevents this from working currently - several users on forums report same
 		
 	if(PLAY == true) {
+
 		var now = new Date();
 		PAUSE_DELTA = Math.abs(scroll_timestamp - now);                             // difference in milliseconds
 		$('#tab_marker_wrapper').html('<div id="tab_marker">&nbsp;</div>');         // kill the currently animating tab_marker by creating a new one
 		$('#tab_marker').css('left',(PAUSE_DELTA*PIXELS_PER_MS_SCROLL)+'px');
-		PLAY = false;
 	}	
 	else {
+	
 		$('#tab_marker').css('left',(PAUSE_DELTA*PIXELS_PER_MS_SCROLL)+'px');
 	}
 	
-	PLAY == false;
 }
 
 function speedUp() {
@@ -370,9 +371,6 @@ function speedUp() {
 	
 	pause();                        // force redraw of marker based on new PIXELS_PER_MS_SCROLL
 	
-	if(PLAY == true) {              // if speed was modified while in play mode, keep playing
-		play();
-	}
 }
 
 function slowDown() {
@@ -382,9 +380,6 @@ function slowDown() {
 
 	pause();                        // force redraw of marker based on new PIXELS_PER_MS_SCROLL
 	
-	if(PLAY == true) {              // if speed was modified while in play mode, keep playing
-		play();
-	}
 }
 
 function zoomDown() {
