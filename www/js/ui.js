@@ -339,24 +339,25 @@ function play() {
 	moveTabMarker();
 }
 
-function pause() {
+var PAUSE_DELTA = 0;
 
-    var now = new Date()  
-    var diff = Math.abs(scroll_timestamp - now);                                // difference in milliseconds
+function pause() {
 
 	clearInterval(scoring_interrupt);	
 	$('#play_tab').show();	
 	clearTimeout(animate_timer);
 	
-	// $('.tab_marker').css('animation-play-state','paused');                   // browser bug prevents this from working currently - several users on forums report same
+	// $('.tab_marker').css('animation-play-state','paused');                       // browser bug prevents this from working currently - several users on forums report same
 		
 	if(PLAY == true) {
-		PLAY = false;
+		var now = new Date();
+		PAUSE_DELTA = Math.abs(scroll_timestamp - now);                             // difference in milliseconds
 		$('#tab_marker_wrapper').html('<div id="tab_marker">&nbsp;</div>');         // kill the currently animating tab_marker by creating a new one
-		$('#tab_marker').css('left',(diff*PIXELS_PER_MS_SCROLL)+'px');
+		$('#tab_marker').css('left',(PAUSE_DELTA*PIXELS_PER_MS_SCROLL)+'px');
+		PLAY = false;
 	}	
 	else {
-		alert('already');
+		$('#tab_marker').css('left',(PAUSE_DELTA*PIXELS_PER_MS_SCROLL)+'px');
 	}
 }
 
@@ -364,8 +365,8 @@ function speedUp() {
 
 	SCROLLPERIOD *= 0.9;
 	PIXELS_PER_MS_SCROLL = SCREEN_WIDTH/SCROLLPERIOD;
-	pause();
-	debugOut('Speed Up');
+	pause();                        // force redraw of marker based on new PIXELS_PER_MS_SCROLL
+	play();
 }
 
 function slowDown() {
@@ -373,8 +374,8 @@ function slowDown() {
 	pause();
 	SCROLLPERIOD *= 1.1;
 	PIXELS_PER_MS_SCROLL = SCREEN_WIDTH/SCROLLPERIOD;
-	pause();
-	debugOut('Slow Down');
+	pause();                        // force redraw of marker based on new PIXELS_PER_MS_SCROLL
+	play();
 }
 
 function zoomDown() {
@@ -433,7 +434,7 @@ function stopNote(string, fret) {
 
 function updateScoreAndFretboard() {
     
-	var now = new Date()  
+	var now = new Date();
     var diff = Math.abs(scroll_timestamp - now);                                // difference in milliseconds
 	
 	CURRENT_TIME = SCROLL_INDEX*WINDOWPERIOD + diff*(WINDOWPERIOD/SCROLLPERIOD);
