@@ -121,24 +121,30 @@ $('#slow_down').click(function() {
 $('#rewind_start').click(function() {
 
 		$('.non_scan').hide();
+		$('.scan').hide();
+		$('#rewind_stop').show();
 		pause();
 });
 
 $('#rewind_stop').click(function() {
 
 		$('.non_scan').show();
+		$('.scan').show();
 		pause();
 });
 
 $('#fastforward_start').click(function() {
 
-		$('.non_scan').show();
+		$('.non_scan').hide();
+		$('.scan').hide();
+		$('#fastforward_stop').show();
 		pause();
 });
 
 $('#fastforward_stop').click(function() {
 
-		$('.non_scan').hide();
+		$('.non_scan').show();
+		$('.scan').show();
 		pause();
 });
 
