@@ -125,8 +125,6 @@ $('#zoom_up').click(function() {
 
 function iterateTabMarker() {
 
-    $('#tab_marker').css('transform','translateX(-' + ANIMATE_WIDTH + 'px)').css('transition-duration', '0s')
-	
 	SCROLL_INDEX = SCROLL_INDEX+1;
 	$('.scrollstring').css('margin-left','-' + (SCREEN_WIDTH*SCROLL_INDEX-$('body').css('margin-left').replace('px','')) + 'px');
 	moveTabMarker();
@@ -143,7 +141,7 @@ function moveTabMarker() {
 		SCROLLPERIOD, 'linear', iterateTabMarker);
 	*/
   
-	//$('#tab_marker_wrapper').html('<div id="tab_marker">&nbsp;</div>');
+	$('#tab_marker_wrapper').html('<div id="tab_marker">&nbsp;</div>');
 	$('#tab_marker').css('transform','translateX(' + ANIMATE_WIDTH + 'px)').css('transition-duration', SCROLLPERIOD/1000 +'s').css('transition-timing-function','linear');
 	
 	scroll_timestamp = new Date(); //"now"
@@ -343,6 +341,7 @@ function pause() {
 	var now = new Date()  
     var diff = Math.abs(scroll_timestamp - now);                                // difference in milliseconds
 
+	$('#tab_marker').css('left',(diff*PIXELS_PER_MS)+'px');
 	//$('#tab_marker_wrapper').html('<div id="tab_marker_' + SCROLL_INDEX + '" class="tab_marker">&nbsp;</div>').css('left','100px');
 	//$('#tab_marker_wrapper').html('<div id="tab_marker">&nbsp;</div>').css('left','100px');
 
