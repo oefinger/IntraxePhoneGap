@@ -355,15 +355,16 @@ function pause() {
 	if(PLAY == true) {
 		var now = new Date();
 		PAUSE_DELTA = Math.abs(scroll_timestamp - now);                             // difference in milliseconds
-		//$('#tab_marker_wrapper').html('<div id="tab_marker">&nbsp;</div>');         // kill the currently animating tab_marker by creating a new one
+		$('#tab_marker_wrapper').html('<div id="tab_marker">&nbsp;</div>');         // kill the currently animating tab_marker by creating a new one
 		$('#tab_marker').css('left',(PAUSE_DELTA*PIXELS_PER_MS_SCROLL)+'px');
-		
+		//PLAY = false;
 	}	
 	else {
 	
 		$('#tab_marker').css('left',(PAUSE_DELTA*PIXELS_PER_MS_SCROLL)+'px');
 	}
 	
+	//PLAY == false;
 }
 
 function speedUp() {
