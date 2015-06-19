@@ -118,6 +118,30 @@ $('#slow_down').click(function() {
 		slowDown();
 });
 
+$('#rewind_start').click(function() {
+
+		$('.non_scan').hide();
+		pause();
+});
+
+$('#rewind_stop').click(function() {
+
+		$('.non_scan').show();
+		pause();
+});
+
+$('#fastforward_start').click(function() {
+
+		$('.non_scan').show();
+		pause();
+});
+
+$('#fastforward_stop').click(function() {
+
+		$('.non_scan').hide();
+		pause();
+});
+
 function iterateTabMarker() {
 
     $('#tab_marker_wrapper').html('<div id="tab_marker">&nbsp;</div>');         // kill the currently animating tab_marker by creating a new one
@@ -158,10 +182,6 @@ var Note = function(string, fret, is_silent, timeInMs) {
 	this.is_silent = is_silent;
 	this.time = timeInMs;
 }
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// duration is unitless - minimum value is 1, no max value
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function writeNote(string, fret, timeInMs) {
          
@@ -355,12 +375,12 @@ function pause() {
 
 function speedChange() {
 
-	var is_paused = !PLAY;           // local state variable -- global PLAY will be modified when pause() is called below
+	var is_paused = !PLAY;          // local state variable -- global PLAY will be modified when pause() is called below
 	PIXELS_PER_MS_SCROLL = SCREEN_WIDTH/SCROLLPERIOD;
 	
 	pause();                        // force redraw of marker based on new PIXELS_PER_MS_SCROLL
 	
-	if(!is_paused) {              // if speed was modified while in play mode, keep playing
+	if(!is_paused) {                // if speed was modified while in play mode, keep playing
 		play();
 	}
 
