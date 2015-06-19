@@ -152,7 +152,7 @@ function moveTabMarker() {
     var anim_width = ANIMATE_WIDTH - parseInt($('#tab_marker').css('left').replace('px','')); 
 	var scrollperiod = (anim_width/ANIMATE_WIDTH)*SCROLLPERIOD;
 	
-	scroll_timestamp = new Date() + parseInt($('#tab_marker').css('left').replace('px',''))/PIXELS_PER_MS_SCROLL;               // timestamp describing when the scrolling began
+	scroll_timestamp = new Date() - parseInt($('#tab_marker').css('left').replace('px',''))/PIXELS_PER_MS_SCROLL;               // timestamp describing when the scrolling began
 
 	$('#tab_marker').css('transform','translateX(' + anim_width + 'px)').css('transition-duration', scrollperiod/1000 +'s').css('transition-timing-function','linear');
 	
